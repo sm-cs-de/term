@@ -1,0 +1,243 @@
+#include "Lib.h"
+
+
+using namespace std;
+
+
+Lib::Lib(Term *const term, const string &name, const bool delete_tmp) : m_name(name), m_term(term), m_delete(delete_tmp) {
+   if (!term) {
+      throw new Error("Kein Term übergeben !");
+   }
+
+   get_names();
+   get_args();
+}
+
+void Lib::create() {
+
+   ofstream *ofs;
+
+   ofs = create_open(m_name_tmp[0]);
+   create_header(*ofs);
+   ofs->close();
+   delete ofs;
+
+   ofs = create_open(m_name_tmp[1]);
+   create_source(*ofs, m_name_tmp[0]);
+   ofs->close();
+   delete ofs;
+
+   create_lib(m_name_file, m_name_tmp[1]);
+
+   if (m_delete) {
+      if (remove(m_name_tmp[0].c_str()) || remove(m_name_tmp[1].c_str())) {
+         throw new Error("Konnte temporäre Deteien nicht löschen !");
+      }
+   }
+}
+
+void Lib::get_names() {
+   if (!m_name.size()) {
+      m_name = m_term->print();
+      replace_substring(&m_name,"/",":");
+   }
+
+   string dir = "./", pre = "lib_";
+   m_name_tmp.push_back(dir + pre + m_name + ".hpp"); // Header
+   m_name_tmp.push_back(dir + pre + m_name + ".cpp"); // Source
+   m_name_file = dir + pre + m_name + ".so";
+}
+
+void Lib::get_args() {
+
+   vector<Term *> terms;
+   terms.push_back(m_term);
+
+   unsigned long idx = 0;
+   do {
+      if (terms[idx]->is_primitive()) {
+         if (!terms[idx]->is_numeric()) {
+            m_args.push_back(terms[idx]->print());
+         }
+      } else {
+         for (unsigned long i=0; i<terms[idx]->fkt()->term().size(); i++) {
+            terms.push_back(terms[idx]->fkt()->term()[i]);
+         }
+      }
+
+      idx++;
+   } while (idx < terms.size());
+
+   sort(m_args.begin(), m_args.end());
+   m_args.erase(unique(m_args.begin(), m_args.end()), m_args.end());    // doppelte Einträge raus
+}
+
+ofstream *Lib::create_open(const string &file_name) const {
+
+   ofstream *ofs = new ofstream();
+   if (!ofs) { throw new Error("Konnte ofstream nicht anlegen !"); }
+
+   ofs->open(file_name.c_str(), ios::out);
+   if (!ofs->is_open()) {
+      throw new Error(string("Datei ") + file_name + "konnte nicht geöffnet werden !");
+   }
+
+   return ofs;
+}
+
+void Lib::create_header(ofstream &ofs) const {
+
+   string allowed = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+   string guard = "TERM_LIB_" + m_name;
+
+   unsigned long pos = guard.find_first_not_of(allowed);
+   while (pos != string::npos) {
+      guard[pos] = '_';
+      pos = guard.find_first_not_of(allowed,pos+1);
+   }
+
+   ofs << "#ifndef " << guard << endl;
+   ofs << "#define " << guard << endl;
+
+   ofs << "#include <cstdlib>" << endl;
+   ofs << "#include <cstdio>" << endl;
+   ofs << "#include <cmath>" << endl;
+
+   ofs << "#ifdef __cplusplus" << endl;
+   ofs << "extern \"C\" {" << endl;
+   ofs << "#endif" << endl;
+
+   create_evaluate(ofs, true);
+   create_derivate(ofs, true);
+
+   ofs << "#ifdef __cplusplus" << endl;
+   ofs << "}" << endl;
+   ofs << "#endif" << endl;
+   ofs << "#endif" << endl;
+   ofs << flush;
+}
+
+void Lib::create_source(ofstream &ofs, const string &header_name) const {
+
+   ofs << "#include \"" << header_name << "\"" << endl;
+   create_evaluate(ofs);
+   create_derivate(ofs);
+   ofs << flush;
+}
+
+void Lib::create_evaluate(ofstream &ofs, const bool only_head) const {
+
+   ofs << "double evaluate(";
+   for (unsigned long i=0; i<m_args.size(); i++) {
+      ofs << "double " << m_args[i];
+      if (i < m_args.size()-1) {
+         ofs << ",";
+      }
+   }
+   ofs << ")";
+
+   if (only_head) {
+      ofs << ";" << endl;
+      return;
+   }
+   ofs << "{" << endl;
+
+   string expr = m_term->print();
+   replace_term_symbols(&expr);
+   ofs << "return (" << expr << ");" << endl;
+
+   ofs << "}" << endl;
+}
+
+void Lib::create_derivate(ofstream &ofs, const bool only_head) const {
+
+   ofs << "double derivate(";
+   ofs << "unsigned long arg_num";
+   for (unsigned long i=0; i<m_args.size(); i++) {
+      ofs << ",";
+      ofs << "double " << m_args[i];
+   }
+   ofs << ")";
+
+   if (only_head) {
+      ofs << ";" << endl;
+      return;
+   }
+   ofs << "{" << endl;
+
+   if (!m_args.size()) {         // falls Term nur Zahl ist
+      ofs << "return 0.0;" << endl;
+   } else {
+      if (m_args.size() > 1L) {
+         ofs << "switch (arg_num) {" << endl;
+      }
+      string expr;
+      for (unsigned long i=0; i<m_args.size(); i++) {
+         expr = m_term->derivate(Term(m_args[i])).print();
+         replace_term_symbols(&expr);
+
+         if (m_args.size() > 1L) {
+            ofs << "case " << i << ": ";
+         }
+         ofs << "return (" << expr << ");" << endl;
+      }
+      if (m_args.size() > 1L) {
+         ofs << "default: exit(EXIT_FAILURE);" << endl;
+         ofs << "}" << endl;
+      }
+   }
+
+   ofs << "}" << endl;
+}
+
+void Lib::create_lib(const string file_out, const string source_name) const {
+
+   string cmd = string("g++ \"") + source_name + "\" -o \"" + file_out + "\" -fPIC -lm -shared -O3 -march=native -s";
+
+   if (system(cmd.c_str())) {
+      throw new Error("Fehler beim Kompilieren !");
+   }
+}
+
+void replace_term_symbols(string *const expr) {
+   if (!expr) {
+      throw new Error("Kein String !");
+   }
+
+   replace_substring(expr, const_e,        "M_E");
+   replace_substring(expr, const_log2e,    "M_LOG2E");
+   replace_substring(expr, const_log10e,   "M_LOG10E");
+   replace_substring(expr, const_ln2,      "M_LN2");
+   replace_substring(expr, const_ln10,     "M_LN10");
+   replace_substring(expr, const_pi,       "M_PI");
+   replace_substring(expr, const_pi_2,     "M_PI_2");
+   replace_substring(expr, const_pi_4,     "M_PI_4");
+   replace_substring(expr, const_1_pi,     "M_1_PI");
+   replace_substring(expr, const_2_pi,     "M_2_PI");
+   replace_substring(expr, const_2_sqrtpi, "M_2_SQRTPI");
+   replace_substring(expr, const_sqrt2,    "M_SQRT2");
+   replace_substring(expr, const_sqrt1_2,  "M_SQRT1_2");
+
+   replace_substring(expr, function_bracket.substr(0,1), "(");
+   replace_substring(expr, function_bracket.substr(1,1), ")");
+   replace_substring(expr, Exp::name, "exp");
+   replace_substring(expr, Sin::name, "sin");
+   replace_substring(expr, Cos::name, "cos");
+   replace_substring(expr, Tan::name, "tan");
+   //TODO: funktionen aufnehmen
+}
+
+void replace_substring(string *const str, const string what, const string with) {
+   if (!str) {
+      throw new Error("Kein String !");
+   }
+
+   unsigned long pos = str->find(what);
+   while (pos != string::npos) {
+      str->replace(pos, what.length(), with);
+      pos = str->find(what, pos+1);
+   }
+}
+
+
+
