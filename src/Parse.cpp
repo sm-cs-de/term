@@ -3,8 +3,6 @@
 
 using namespace std;
 
-bool replace_constants = true;
-
 
 void Term::parse() {	cout << "» " << m_string << endl;
 
@@ -13,6 +11,7 @@ void Term::parse() {	cout << "» " << m_string << endl;
 
 	/* Numerisch ? */
 	if (parse_numeric()) {
+      m_is_primitive = true;
 		return;
 	}
 
@@ -43,8 +42,8 @@ void Term::parse() {	cout << "» " << m_string << endl;
 		return;
 	}
 
-	/* Plus-Minus-Abfolgen fixen */
-	if (parse_pm()) {
+	/* Gültige Operator-Abfolgen ersetzen */
+	if (parse_op_comb()) {
 		parse();
 		return;
 	}
@@ -101,48 +100,33 @@ void Term::parse_initial() {
 	m_string = ss.str();
 }
 
-bool Term::parse_numeric(const bool is_numeric) {
+bool Term::parse_numeric() {
 
-	if (!is_numeric) {
-		stringstream pos_ss;
-		size_t name_size;
-		bool dot = false, exp = false;
-		for (unsigned long i=0; i<m_string.size(); i++) {
-			if (name_size = Minus::name.size(), (m_string.size()-i >= name_size) && (m_string.substr(i,name_size).compare(Minus::name) == 0L)) {
-				if (!i) {
-					continue;
-				} else {
-					return false;
-				}
-			}
-			if (m_string[i] == '.') {
-				if (dot) {
-					return false;
-				} else {
-					dot = true;
-					continue;
-				}
-			}
-			if (string("0123456789").find(m_string[i]) == string::npos) {
-				if ((m_string[i] == 'e') || (m_string[i] == 'E')) {
-					if (exp || !i || (i == m_string.size()-1) || !((m_string[i+1] == '+') || (m_string[i+1] == '-'))) {
-						return false;
-					} else {
-						exp = true;
-						i++;												/* + bzw. - überspringen */
-					}
-				} else {
-					return false;
-				}
-			}
-		}
-	}
+   auto it = constants.find(m_string);
+   if (it != constants.end()) {
+      m_num = it->second;
 
-	m_is_primitive = true;
+   } else {
+      string digits = "0123456789";
+
+      size_t pos = m_string.find_first_not_of(string("-.") + digits);
+      if (pos != string::npos) {
+         return false;
+      } else {
+         pos = m_string.find(Minus::name);
+         if (pos && (pos !=string::npos)) {
+            return false;
+         }
+         pos = m_string.find(".");
+         if ((pos != string::npos) && (m_string.find(".",pos+1) != string::npos)) {
+            return false;
+         }
+      }
+
+      stringstream ss(m_string);
+      ss >> m_num;
+   }
 	m_is_numeric = true;
-
-	stringstream string_ss(m_string);
-	string_ss >> m_num;
 
 	return true;
 }
@@ -196,31 +180,30 @@ void Term::parse_brackets(vector<long> &level, const string &bracket_type) const
 	}
 }
 
-bool Term::parse_pm() {
-	unsigned long p_size = Plus::name.size();
-	unsigned long m_size = Minus::name.size();
-	stringstream ss;
+bool Term::parse_op_comb() {
+   vector<string> variants = { // TODO: andere Kombinationen mit aufnehmen
+      Plus::name+Plus::name, Plus::name+Minus::name, Minus::name+Plus::name, Minus::name+Minus::name
+   };
+   vector<string> equivalent = {
+      Plus::name, Minus::name, Minus::name, Plus::name
+   };
 
-	for (unsigned long i=0; i<m_string.size(); i++) {
-		if (m_string.size()-i >= p_size+m_size) {
-			if (((m_string.substr(i,p_size).compare(Plus::name) == 0L) && (m_string.substr(i+p_size,m_size).compare(Minus::name) == 0L)) ||
-				((m_string.substr(i,m_size).compare(Minus::name) == 0L) && (m_string.substr(i+m_size,p_size).compare(Plus::name) == 0L))) {
-				ss << m_string.substr(0,i) << Minus::name << m_string.substr(i+m_size+p_size);
-				m_string = ss.str();
-				return true;
-			} else if ((m_string.substr(i,m_size).compare(Minus::name) == 0L) && (m_string.substr(i+m_size,m_size).compare(Minus::name) == 0L)) {
-				ss << m_string.substr(0,i) << Plus::name << m_string.substr(i+m_size+m_size);
-				m_string = ss.str();
-				return true;
-			}
-		}
-	}
-
-	return false;
+   size_t pos, len = m_string.size();
+   while (true) {
+      for (unsigned long i=0; i<variants.size(); i++) {
+         pos = m_string.find(variants[i]);
+         if (pos != string::npos) {
+            m_string = m_string.replace(pos, variants[i].size(), equivalent[i]);
+            break;
+         }
+      }
+      if (pos == string::npos) {
+         return (len != m_string.size());
+      }
+   }
 }
 
 void Term::parse_subterms(vector<string> &subterms, vector<string> &ops, const vector<long> &level, const vector<long> &function_level) const {
-
 	stringstream ss;
 	vector<unsigned long> subterm_positions;
 
@@ -406,9 +389,7 @@ void Term::create(const vector<string> &subterms, const vector<string> &ops) {
 		}
 	} else {														/* Nein -> RAW */
 		m_is_primitive = true;
-		if (replace_constants && parse_constants()) {
-			parse_numeric(true);
-		}
+      parse_numeric();
 	}
 }
 
@@ -431,15 +412,4 @@ vector<string> Term::get_multi_args(const vector<string> &subterms, const string
 	for (unsigned long i=0; i<args.size(); i++) { cout << args[i] << " | "; };	cout << endl;
 
 	return args;
-}
-
-bool Term::parse_constants() {
-
-   auto it = constants.find(m_string);
-   if (it != constants.end()) {
-      m_string = it->second;
-      return true;
-   }
-
-   return false;
 }

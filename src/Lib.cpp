@@ -213,10 +213,6 @@ void replace_term_symbols(string *const expr) {
       throw new Error("Kein String !");
    }
 
-   for (auto it=constants.begin(); it!=constants.end(); ++it) {
-      replace_substring(expr, it->first, it->second);
-   }
-
    replace_substring(expr, function_bracket.substr(0,1), "(");
    replace_substring(expr, function_bracket.substr(1,1), ")");
    replace_substring(expr, Exp::name, "exp");

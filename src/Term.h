@@ -35,30 +35,29 @@ class Term {
 
 		void parse();
 		void parse_initial();
-		bool parse_numeric(const bool is_numeric = false);
+		bool parse_numeric();
 		void parse_brackets(std::vector<long> &level, const std::string &bracket_type) const;
-		bool parse_pm();
+		bool parse_op_comb();
 		void parse_subterms(std::vector<std::string> &subterms, std::vector<std::string> &ops, const std::vector<long> &level, const std::vector<long> &function_level) const;
 		void create(const std::vector<std::string> &subterms, const std::vector<std::string> &ops);
 		std::vector<std::string> get_multi_args(const std::vector<std::string> &subterms, const std::string &op_name) const;
-		bool parse_constants();
 };
 
 
-static const std::map<std::string,std::string> constants = {
-	{"c_e",        "M_E"},
-	{"c_lbe",      "M_LOG2E"},
-	{"c_lge",      "M_LOG10E"},
-	{"c_ln2",      "M_LN2"},
-	{"c_ln10",     "M_LN10"},
-	{"c_pi",       "M_PI"},
-	{"c_pi_2",     "M_PI_2"},
-	{"c_pi_4",     "M_PI_4"},
-	{"c_1_pi",     "M_1_PI"},
-	{"c_2_pi",     "M_2_PI"},
-	{"c_2_sqrtpi", "M_2_SQRTPI"},
-	{"c_sqrt2",    "M_SQRT2"},
-	{"c_1_sqrt2",  "M_SQRT1_2"}
+static const std::map<std::string,double> constants = {
+	{"M_E",	      M_E},
+	{"M_LOG2E", 	M_LOG2E},
+	{"M_LOG10E",   M_LOG10E},
+	{"M_LN2",	   M_LN2},
+	{"M_LN10",  	M_LN10},
+	{"M_PI",	      M_PI},
+	{"M_PI_2",  	M_PI_2},
+	{"M_PI_4",	   M_PI_4},
+	{"M_1_PI",  	M_1_PI},
+	{"M_2_PI",	   M_2_PI},
+	{"M_2_SQRTPI",	M_2_SQRTPI},
+	{"M_SQRT2",	   M_SQRT2},
+	{"M_SQRT1_2",	M_SQRT1_2}
 };
 
 
