@@ -45,18 +45,21 @@ class Term {
 };
 
 
-static const std::string const_e("e");
-static const std::string const_log2e("lbe");
-static const std::string const_log10e("lge");
-static const std::string const_ln2("ln2");
-static const std::string const_ln10("ln10");
-static const std::string const_pi("pi");
-static const std::string const_pi_2("pi_2");
-static const std::string const_pi_4("pi_4");
-static const std::string const_1_pi("1_pi");
-static const std::string const_2_pi("2_pi");
-static const std::string const_2_sqrtpi("2_sqrtpi");
-static const std::string const_sqrt2("sqrt2");
-static const std::string const_sqrt1_2("1_sqrt2");
+static const std::map<std::string,std::string> constants = {
+	{"c_e",        "M_E"},
+	{"c_lbe",      "M_LOG2E"},
+	{"c_lge",      "M_LOG10E"},
+	{"c_ln2",      "M_LN2"},
+	{"c_ln10",     "M_LN10"},
+	{"c_pi",       "M_PI"},
+	{"c_pi_2",     "M_PI_2"},
+	{"c_pi_4",     "M_PI_4"},
+	{"c_1_pi",     "M_1_PI"},
+	{"c_2_pi",     "M_2_PI"},
+	{"c_2_sqrtpi", "M_2_SQRTPI"},
+	{"c_sqrt2",    "M_SQRT2"},
+	{"c_1_sqrt2",  "M_SQRT1_2"}
+};
+
 
 #endif

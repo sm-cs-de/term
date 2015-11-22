@@ -7,7 +7,6 @@ bool replace_constants = true;
 
 
 void Term::parse() {	cout << "» " << m_string << endl;
-	stringstream ss;
 
 	/* Leer oder ungültige Zeichen, Leerzeichen entfernen */
 	parse_initial();
@@ -435,39 +434,12 @@ vector<string> Term::get_multi_args(const vector<string> &subterms, const string
 }
 
 bool Term::parse_constants() {
-	stringstream ss;
-	//ss << setprecision(numeric_limits<double>::digits);
 
-	if (m_string.compare(const_e) == 0L) {
-		ss << M_E;
-	} else if (m_string.compare(const_log2e) == 0L) {
-		ss << M_LOG2E;
-	} else if (m_string.compare(const_log10e) == 0L) {
-		ss << M_LOG10E;
-	} else if (m_string.compare(const_ln2) == 0L) {
-		ss << M_LN2;
-	} else if (m_string.compare(const_ln10) == 0L) {
-		ss << M_LN10;
-	} else if (m_string.compare(const_pi) == 0L) {
-		ss << M_PI;
-	} else if (m_string.compare(const_pi_2) == 0L) {
-		ss << M_PI_2;
-	} else if (m_string.compare(const_pi_4) == 0L) {
-		ss << M_PI_4;
-	} else if (m_string.compare(const_1_pi) == 0L) {
-		ss << M_1_PI;
-	} else if (m_string.compare(const_2_pi) == 0L) {
-		ss << M_2_PI;
-	} else if (m_string.compare(const_2_sqrtpi) == 0L) {
-		ss << M_2_SQRTPI;
-	} else if (m_string.compare(const_sqrt2) == 0L) {
-		ss << M_SQRT2;
-	} else if (m_string.compare(const_sqrt1_2) == 0L) {
-		ss << M_SQRT1_2;
-	} else {
-		return false;
-	}
-	m_string = string(ss.str());
+   auto it = constants.find(m_string);
+   if (it != constants.end()) {
+      m_string = it->second;
+      return true;
+   }
 
-	return true;
+   return false;
 }

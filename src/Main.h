@@ -11,6 +11,7 @@
 #include <sstream>
 #include <fstream>
 
+#include <map>
 #include <vector>
 #include <algorithm>
 #include <iomanip>
@@ -37,34 +38,6 @@ class Error {
 	private:
 		std::string m_error;
 };
-
-//namespace std {
-//// This class exists solely to "trick" the compiler into
-//// considering this allocator a new, different type
-//class newallocator : public allocator<char> {};
-//
-//// template specialize std::stringstream to inherit from basic_stringstream
-//// using our newallocator in place of std::allocator<char>
-//template <> class basic_stringstream<char,char_traits<char>,allocator<char> > : public basic_stringstream <char,char_traits<char>,newallocator> {
-//	public:
-//		basic_stringstream() {
-//			precision(16);
-//		}
-//};
-//}
-//
-//namespace std {
-//	class precision_ss : public stringstream {
-//		public:
-//			precision_ss(ios_base::openmode which = ios_base::in) : stringstream(which)  {
-//				precision(3);
-//			}
-//			precision_ss(const string& str, ios_base::openmode which = ios_base::in | ios_base::out) : stringstream(str,which) {
-//				precision(3);
-//			}
-//	};
-//}
-//#define stringstream precision_ss
 
 
 #endif

@@ -4,48 +4,52 @@
 using namespace std;
 
 
-Lib::Lib(Term *const term, const string &name, const bool delete_tmp) : m_name(name), m_term(term), m_delete(delete_tmp) {
+Lib::Lib(Term *const term, const string &name, const bool delete_tmp) : m_name(name), m_name_file(""), m_term(term), m_args() {
    if (!term) {
       throw new Error("Kein Term übergeben !");
    }
 
-   get_names();
+   string basename = get_names();
    get_args();
+
+   create(basename, delete_tmp);
 }
 
-void Lib::create() {
+void Lib::create(const string &basename, const bool delete_tmp) {
 
    ofstream *ofs;
+   string name_hpp = basename + ".hpp";
+   string name_cpp = basename + ".cpp";
 
-   ofs = create_open(m_name_tmp[0]);
+   ofs = create_open(name_hpp);
    create_header(*ofs);
    ofs->close();
    delete ofs;
 
-   ofs = create_open(m_name_tmp[1]);
-   create_source(*ofs, m_name_tmp[0]);
+   ofs = create_open(name_cpp);
+   create_source(*ofs, name_hpp);
    ofs->close();
    delete ofs;
 
-   create_lib(m_name_file, m_name_tmp[1]);
+   create_lib(m_name_file, name_cpp);
 
-   if (m_delete) {
-      if (remove(m_name_tmp[0].c_str()) || remove(m_name_tmp[1].c_str())) {
+   if (delete_tmp) {
+      if (remove(name_hpp.c_str()) || remove(name_cpp.c_str())) {
          throw new Error("Konnte temporäre Deteien nicht löschen !");
       }
    }
 }
 
-void Lib::get_names() {
+string Lib::get_names() {
    if (!m_name.size()) {
       m_name = m_term->print();
       replace_substring(&m_name,"/",":");
    }
 
-   string dir = "./", pre = "lib_";
-   m_name_tmp.push_back(dir + pre + m_name + ".hpp"); // Header
-   m_name_tmp.push_back(dir + pre + m_name + ".cpp"); // Source
-   m_name_file = dir + pre + m_name + ".so";
+   string basename = "./lib_" + m_name;
+   m_name_file = basename + ".so";
+
+   return basename;
 }
 
 void Lib::get_args() {
@@ -55,13 +59,14 @@ void Lib::get_args() {
 
    unsigned long idx = 0;
    do {
-      if (terms[idx]->is_primitive()) {
-         if (!terms[idx]->is_numeric()) {
-            m_args.push_back(terms[idx]->print());
+      Term *term = terms[idx];
+      if (term->is_primitive()) {
+         if (!term->is_numeric() && (constants.find(term->print())==constants.end())) {
+            m_args.push_back(term->print());
          }
       } else {
-         for (unsigned long i=0; i<terms[idx]->fkt()->term().size(); i++) {
-            terms.push_back(terms[idx]->fkt()->term()[i]);
+         for (unsigned long i=0; i<term->fkt()->term().size(); i++) {
+            terms.push_back(term->fkt()->term()[i]);
          }
       }
 
@@ -152,9 +157,13 @@ void Lib::create_evaluate(ofstream &ofs, const bool only_head) const {
 void Lib::create_derivate(ofstream &ofs, const bool only_head) const {
 
    ofs << "double derivate(";
-   ofs << "unsigned long arg_num";
+   if (m_args.size() > 1L) {
+      ofs << "unsigned long arg_num,";
+   }
    for (unsigned long i=0; i<m_args.size(); i++) {
-      ofs << ",";
+      if (i) {
+         ofs << ",";
+      }
       ofs << "double " << m_args[i];
    }
    ofs << ")";
@@ -204,19 +213,9 @@ void replace_term_symbols(string *const expr) {
       throw new Error("Kein String !");
    }
 
-   replace_substring(expr, const_e,        "M_E");
-   replace_substring(expr, const_log2e,    "M_LOG2E");
-   replace_substring(expr, const_log10e,   "M_LOG10E");
-   replace_substring(expr, const_ln2,      "M_LN2");
-   replace_substring(expr, const_ln10,     "M_LN10");
-   replace_substring(expr, const_pi,       "M_PI");
-   replace_substring(expr, const_pi_2,     "M_PI_2");
-   replace_substring(expr, const_pi_4,     "M_PI_4");
-   replace_substring(expr, const_1_pi,     "M_1_PI");
-   replace_substring(expr, const_2_pi,     "M_2_PI");
-   replace_substring(expr, const_2_sqrtpi, "M_2_SQRTPI");
-   replace_substring(expr, const_sqrt2,    "M_SQRT2");
-   replace_substring(expr, const_sqrt1_2,  "M_SQRT1_2");
+   for (auto it=constants.begin(); it!=constants.end(); ++it) {
+      replace_substring(expr, it->first, it->second);
+   }
 
    replace_substring(expr, function_bracket.substr(0,1), "(");
    replace_substring(expr, function_bracket.substr(1,1), ")");

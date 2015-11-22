@@ -10,23 +10,20 @@ class Lib {
 	public:
 		Lib(Term *const term, const std::string &name = "", const bool delete_tmp = true);
 
-		inline const std::string &print() const { return m_name; }
-		inline const std::string &print_file() const { return m_name_file; }
-		inline const std::vector<std::string> &print_tmp() const { return m_name_tmp; }
-
-		void create();
+		inline const std::string &name() const { return m_name; }
+		inline const std::string &name_file() const { return m_name_file; }
 
 	private:
-		std::string m_name;
-		std::string m_name_file;
-		std::vector<std::string> m_name_tmp;
+		std::string m_name;                    /* Name der Lib */
+		std::string m_name_file;               /* Name der Datei *.so */
 
 		Term *const m_term;
-		std::vector<std::string> m_args;
-		bool m_delete;
+		std::vector<std::string> m_args;       /* Term Variablen */
 
-		void get_names();
+		std::string get_names();
 		void get_args();
+
+		void create(const std::string &basename, const bool delete_tmp);
 		std::ofstream *create_open(const std::string &file_name) const;
 		void create_header(std::ofstream &ofs) const;
 		void create_source(std::ofstream &ofs, const std::string &header_name) const;
@@ -37,5 +34,6 @@ class Lib {
 
 void replace_term_symbols(std::string *const expr);
 void replace_substring(std::string *const str, const std::string what, const std::string with);
+
 
 #endif

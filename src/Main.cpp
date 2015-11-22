@@ -21,8 +21,7 @@ int main(int argc, char *argv[]) {
 
 		cout << COL_HLP << "Lib:" << COL_CLR << endl;
 		Lib *lib = new Lib(&input, "term", false);
-		lib->create();
-		cout << COL_HLP << lib->print_file() << COL_CLR << endl;
+		cout << COL_HLP << lib->name_file() << COL_CLR << endl;
 
 		cout << COL_HLP << "var, val:" << COL_CLR << endl;
 		Term var("x"), val("1.1");
@@ -30,11 +29,11 @@ int main(int argc, char *argv[]) {
 //		cout << COL_HLP << "simpl:" << COL_CLR << endl;
 //		cout << COL_HLP << input.simplify().print() << COL_CLR << endl;
 
-		cout << COL_HLP << "eval:" << COL_CLR << endl;
-		cout << COL_HLP << input.evaluate(var, val).print() << COL_CLR << endl;
+//		cout << COL_HLP << "eval:" << COL_CLR << endl;
+//		cout << COL_HLP << input.evaluate(var, val).print() << COL_CLR << endl;
 
-//		cout << COL_HLP << "deriv:" << COL_CLR << endl;
-//		cout << COL_HLP << input.derivate(var).print() << COL_CLR << endl;
+		cout << COL_HLP << "deriv:" << COL_CLR << endl;
+		cout << COL_HLP << input.derivate(var).print() << COL_CLR << endl;
 
 
 	} catch (Error *exc) {
