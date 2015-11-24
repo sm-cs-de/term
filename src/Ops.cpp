@@ -5,11 +5,7 @@ using namespace std;
 
 
 /** Plus */
-Plus::Plus(const vector<string> &term_str) : Function() {
-   for (unsigned long i=0; i<term_str.size(); i++) {
-      m_args.push_back(new Term(term_str[i]));
-   }
-}
+Plus::Plus(const vector<string> &term_str) : Function(term_str) {}
 
 const string Plus::name("+");
 
@@ -17,7 +13,7 @@ Term Plus::derivate(const Term &var) {
    stringstream deriv_ss;
 
    for (unsigned long i=0; i<m_args.size(); i++) {
-      deriv_ss << m_args[i]->derivate(var).print();
+      deriv_ss << m_args[i]->derivate(var)._string();
       if (i < m_args.size()-1) {
          deriv_ss << Plus::name;
       }
@@ -30,7 +26,7 @@ Term Plus::evaluate(const Term &var, const Term &val) {
    stringstream eval_ss;
 
    for (unsigned long i=0; i<m_args.size(); i++) {
-      eval_ss << m_args[i]->evaluate(var,val).print();
+      eval_ss << m_args[i]->evaluate(var,val)._string();
       if (i < m_args.size()-1) {
          eval_ss << Plus::name;
       }
@@ -47,18 +43,18 @@ Term Plus::simplify() {
    for (unsigned long i=0; i<m_args.size(); i++) {
       if (m_args[i]->is_numeric()) {
          sum += m_args[i]->num();
-         // } else if (!m_args[i]->is_primitive() && (m_args[i]->fkt()->get_name().compare(Minus::name) == 0L) && (m_args[i]->fkt()->term()[0]->print().compare("0") == 0L)) {
+         // } else if (!m_args[i]->is_primitive() && (m_args[i]->fkt()->_name().compare(Minus::name) == 0L) && (m_args[i]->fkt()->args()[0]->_string().compare("0") == 0L)) {
 
       } else {
-         if (m_args[i]->is_primitive() || (m_args[i]->fkt()->term().size() == 1L)) {
-            simpl_ss << m_args[i]->print();
+         if (m_args[i]->is_primitive() || (m_args[i]->fkt()->args().size() == 1L)) {
+            simpl_ss << m_args[i]->_string();
          } else {
             Term simpl = m_args[i]->simplify();
             if (simpl.is_numeric()) {
                sum += simpl.num();
                continue;
             } else {
-               simpl_ss << simpl.print();
+               simpl_ss << simpl._string();
             }
          }
          only_numeric = false;
@@ -78,11 +74,7 @@ Term Plus::simplify() {
 
 
 /** Minus */
-Minus::Minus(const vector<string> &term_str) : Function() {
-   for (unsigned long i=0; i<term_str.size(); i++) {
-      m_args.push_back(new Term(term_str[i]));
-   }
-}
+Minus::Minus(const vector<string> &term_str) : Function(term_str) {}
 
 const string Minus::name("-");
 
@@ -91,14 +83,14 @@ Term Minus::derivate(const Term &var) {
 
    for (unsigned long i=0; i<m_args.size(); i++) {
       Term deriv_arg = m_args[i]->derivate(var);
-      if (!i || deriv_arg.is_primitive() || (deriv_arg.fkt()->term().size() == 1L)) {
+      if (!i || deriv_arg.is_primitive() || (deriv_arg.fkt()->args().size() == 1L)) {
          if (deriv_arg.is_numeric() && (deriv_arg.num() < 0.0)) {
-            deriv_ss << deriv_arg.print().substr(Minus::name.size());
+            deriv_ss << deriv_arg._string().substr(Minus::name.size());
          } else {
-            deriv_ss << deriv_arg.print();
+            deriv_ss << deriv_arg._string();
          }
       } else {
-         deriv_ss << term_bracket[0] << deriv_arg.print() << term_bracket[1];
+         deriv_ss << term_bracket[0] << deriv_arg._string() << term_bracket[1];
       }
       if (i < m_args.size()-1) {
          deriv_ss << Minus::name;
@@ -113,10 +105,10 @@ Term Minus::evaluate(const Term &var, const Term &val) {
 
    for (unsigned long i=0; i<m_args.size(); i++) {
       Term eval_arg = m_args[i]->evaluate(var,val);
-      if (!i || eval_arg.is_primitive() || (eval_arg.fkt()->term().size() == 1L)) {
-         eval_ss << eval_arg.print();
+      if (!i || eval_arg.is_primitive() || (eval_arg.fkt()->args().size() == 1L)) {
+         eval_ss << eval_arg._string();
       } else {
-         eval_ss << term_bracket[0] << eval_arg.print() << term_bracket[1];
+         eval_ss << term_bracket[0] << eval_arg._string() << term_bracket[1];
       }
       if (i < m_args.size()-1) {
          eval_ss << Minus::name;
@@ -142,8 +134,8 @@ Term Minus::simplify() {
          if (i && only_numeric) {            /* Falls erstes Argument Zahl ist, bekommt erste nicht-Zahl sonst kein Minus davor */
             simpl_ss << Minus::name;
          }
-         if (m_args[i]->is_primitive() || (m_args[i]->fkt()->term().size() == 1L)) {
-            simpl_ss << m_args[i]->print();
+         if (m_args[i]->is_primitive() || (m_args[i]->fkt()->args().size() == 1L)) {
+            simpl_ss << m_args[i]->_string();
          } else {
             Term simpl = m_args[i]->simplify();
             if (simpl.is_numeric()) {
@@ -156,10 +148,10 @@ Term Minus::simplify() {
                   simpl_ss << Minus::name;
                }
                continue;
-            } else if (simpl.is_primitive() || (simpl.fkt()->term().size() == 1L)) {
-               simpl_ss << simpl.print();
+            } else if (simpl.is_primitive() || (simpl.fkt()->args().size() == 1L)) {
+               simpl_ss << simpl._string();
             } else {
-               simpl_ss << term_bracket[0] << simpl.print() << term_bracket[1];
+               simpl_ss << term_bracket[0] << simpl._string() << term_bracket[1];
             }
          }
          only_numeric = false;
@@ -181,11 +173,7 @@ Term Minus::simplify() {
 
 
 /** Mult */
-Mult::Mult(const vector<string> &term_str) : Function() {
-   for (unsigned long i=0; i<term_str.size(); i++) {
-      m_args.push_back(new Term(term_str[i]));
-   }
-}
+Mult::Mult(const vector<string> &term_str) : Function(term_str) {}
 
 const string Mult::name("*");
 
@@ -194,17 +182,17 @@ Term Mult::derivate(const Term &var) {
 
    for (unsigned long i=0; i<m_args.size(); i++) {
       Term deriv_arg = m_args[i]->derivate(var);
-      if ((deriv_arg.is_primitive() && (!i || (deriv_arg.num() >= 0.0))) || (!deriv_arg.is_primitive() && (deriv_arg.fkt()->term().size() == 1L))) {
-         deriv_ss << deriv_arg.print();
+      if ((deriv_arg.is_primitive() && (!i || (deriv_arg.num() >= 0.0))) || (!deriv_arg.is_primitive() && (deriv_arg.fkt()->args().size() == 1L))) {
+         deriv_ss << deriv_arg._string();
       } else {
-         deriv_ss << term_bracket[0] << deriv_arg.print() << term_bracket[1];
+         deriv_ss << term_bracket[0] << deriv_arg._string() << term_bracket[1];
       }
       for (unsigned long j=0; j<m_args.size(); j++) {
          if (i==j) { continue; }
-         if ((m_args[j]->is_primitive() && (m_args[j]->num() >= 0.0)) || (!m_args[j]->is_primitive() && (m_args[j]->fkt()->term().size() == 1L))) {
-            deriv_ss << Mult::name << m_args[j]->print();
+         if ((m_args[j]->is_primitive() && (m_args[j]->num() >= 0.0)) || (!m_args[j]->is_primitive() && (m_args[j]->fkt()->args().size() == 1L))) {
+            deriv_ss << Mult::name << m_args[j]->_string();
          } else {
-            deriv_ss << Mult::name << term_bracket[0] << m_args[j]->print() << term_bracket[1];
+            deriv_ss << Mult::name << term_bracket[0] << m_args[j]->_string() << term_bracket[1];
          }
       }
       if (i < m_args.size()-1) {
@@ -220,10 +208,10 @@ Term Mult::evaluate(const Term &var, const Term &val) {
 
    for (unsigned long i=0; i<m_args.size(); i++) {
       Term eval_arg = m_args[i]->evaluate(var,val);
-      if ((eval_arg.is_primitive() && (!i || (eval_arg.num() >= 0.0))) || (!eval_arg.is_primitive() && (eval_arg.fkt()->term().size() == 1L))) {
-         eval_ss << eval_arg.print();
+      if ((eval_arg.is_primitive() && (!i || (eval_arg.num() >= 0.0))) || (!eval_arg.is_primitive() && (eval_arg.fkt()->args().size() == 1L))) {
+         eval_ss << eval_arg._string();
       } else {
-         eval_ss << term_bracket[0] << eval_arg.print() << term_bracket[1];
+         eval_ss << term_bracket[0] << eval_arg._string() << term_bracket[1];
       }
       if (i < m_args.size()-1) {
          eval_ss << Mult::name;
@@ -241,18 +229,18 @@ Term Mult::simplify() {
    for (unsigned long i=0; i<m_args.size(); i++) {
       if (m_args[i]->is_numeric()) {
          prod *= m_args[i]->num();
-      } else if (m_args[i]->is_primitive() || (m_args[i]->fkt()->term().size() == 1L)) {
+      } else if (m_args[i]->is_primitive() || (m_args[i]->fkt()->args().size() == 1L)) {
          only_numeric = false;
-         simpl_ss << m_args[i]->print() << Mult::name;
+         simpl_ss << m_args[i]->_string() << Mult::name;
       } else {
          Term simpl = m_args[i]->simplify();
          if (simpl.is_numeric()) {
             prod *= simpl.num();
             continue;
-         } else if (simpl.is_primitive() || (simpl.fkt()->term().size() == 1L)) {
-            simpl_ss << simpl.print() << Mult::name;
+         } else if (simpl.is_primitive() || (simpl.fkt()->args().size() == 1L)) {
+            simpl_ss << simpl._string() << Mult::name;
          } else {
-            simpl_ss << term_bracket[0] << simpl.print() << term_bracket[1] << Mult::name;
+            simpl_ss << term_bracket[0] << simpl._string() << term_bracket[1] << Mult::name;
          }
          only_numeric = false;
       }
@@ -274,11 +262,7 @@ Term Mult::simplify() {
 
 
 /** Div */
-Div::Div(const vector<string> &term_str) : Function() {
-   for (unsigned long i=0; i<term_str.size(); i++) {
-      m_args.push_back(new Term(term_str[i]));
-   }
-}
+Div::Div(const vector<string> &term_str) : Function(term_str) {}
 
 const string Div::name("/");
 
@@ -287,11 +271,11 @@ Term Div::derivate(const Term &var) {
 
    Term simpl_arg = simplify();     /* Ab jetzt gibt es nur noch einen Bruch mit u und v oder garkeinen Bruch mehr */
 
-   if (simpl_arg.is_primitive() || (simpl_arg.fkt()->term().size() == 1L) || (simpl_arg.fkt()->get_name().compare(Div::name) != 0L)) {
-      deriv_ss << simpl_arg.derivate(var).print();
+   if (simpl_arg.is_primitive() || (simpl_arg.fkt()->args().size() == 1L) || (simpl_arg.fkt()->_name().compare(Div::name) != 0L)) {
+      deriv_ss << simpl_arg.derivate(var)._string();
    } else {
-      Term u = *simpl_arg.fkt()->term()[0];
-      Term v = *simpl_arg.fkt()->term()[1];
+      Term u = *simpl_arg.fkt()->args()[0];
+      Term v = *simpl_arg.fkt()->args()[1];
       Term du = u.derivate(var);
       Term dv = v.derivate(var);
 
@@ -303,28 +287,28 @@ Term Div::derivate(const Term &var) {
 
       deriv_ss << term_bracket[0];
       deriv_ss << Minus::name;
-      if (u.is_primitive() || (u.fkt()->term().size() == 1L)) {
-         deriv_ss << u.print();
+      if (u.is_primitive() || (u.fkt()->args().size() == 1L)) {
+         deriv_ss << u._string();
       } else {
-         deriv_ss << term_bracket[0] << u.print() << term_bracket[1];
+         deriv_ss << term_bracket[0] << u._string() << term_bracket[1];
       }
       deriv_ss << Mult::name;
-      if ((dv.is_primitive() && (dv.num() >= 0.0)) || (!dv.is_primitive() && (dv.fkt()->term().size() == 1L))) {
-         deriv_ss << dv.print();
+      if ((dv.is_primitive() && (dv.num() >= 0.0)) || (!dv.is_primitive() && (dv.fkt()->args().size() == 1L))) {
+         deriv_ss << dv._string();
       } else {
-         deriv_ss << term_bracket[0] << dv.print() << term_bracket[1];
+         deriv_ss << term_bracket[0] << dv._string() << term_bracket[1];
       }
       deriv_ss << Plus::name;
-      if (du.is_primitive() || (du.fkt()->term().size() == 1L)) {
-         deriv_ss << du.print();
+      if (du.is_primitive() || (du.fkt()->args().size() == 1L)) {
+         deriv_ss << du._string();
       } else {
-         deriv_ss << term_bracket[0] << du.print() << term_bracket[1];
+         deriv_ss << term_bracket[0] << du._string() << term_bracket[1];
       }
       deriv_ss << Mult::name;
-      if ((v.is_primitive() && (dv.num() >= 0.0)) || (!v.is_primitive() && (v.fkt()->term().size() == 1L))) {
-         deriv_ss << v.print() << term_bracket[1] << Div::name << term_bracket[0] << v.print() << Mult::name << v.print() << term_bracket[1];
+      if ((v.is_primitive() && (dv.num() >= 0.0)) || (!v.is_primitive() && (v.fkt()->args().size() == 1L))) {
+         deriv_ss << v._string() << term_bracket[1] << Div::name << term_bracket[0] << v._string() << Mult::name << v._string() << term_bracket[1];
       } else {
-         deriv_ss << term_bracket[0] << v.print() << term_bracket[1] << term_bracket[1] << Div::name << term_bracket[0] << term_bracket[0] << v.print() << term_bracket[1] << Mult::name << term_bracket[0] << v.print() << term_bracket[1] << term_bracket[1];
+         deriv_ss << term_bracket[0] << v._string() << term_bracket[1] << term_bracket[1] << Div::name << term_bracket[0] << term_bracket[0] << v._string() << term_bracket[1] << Mult::name << term_bracket[0] << v._string() << term_bracket[1] << term_bracket[1];
       }
    }
 
@@ -336,10 +320,10 @@ Term Div::evaluate(const Term &var, const Term &val) {
 
    for (unsigned long i=0; i<m_args.size(); i++) {
       Term eval_arg = m_args[i]->evaluate(var,val);
-      if ((eval_arg.is_primitive() && (!i || (eval_arg.num() >= 0.0))) || (!eval_arg.is_primitive() && (eval_arg.fkt()->term().size() == 1L))) {
-         eval_ss << eval_arg.print();
+      if ((eval_arg.is_primitive() && (!i || (eval_arg.num() >= 0.0))) || (!eval_arg.is_primitive() && (eval_arg.fkt()->args().size() == 1L))) {
+         eval_ss << eval_arg._string();
       } else {
-         eval_ss << term_bracket[0] << eval_arg.print() << term_bracket[1];
+         eval_ss << term_bracket[0] << eval_arg._string() << term_bracket[1];
       }
       if (i < m_args.size()-1) {
          eval_ss << Div::name;
@@ -366,11 +350,11 @@ Term Div::simplify() {
             }
          }
       } else {
-         if (m_args[i]->is_primitive() || (m_args[i]->fkt()->term().size() == 1L)) {
+         if (m_args[i]->is_primitive() || (m_args[i]->fkt()->args().size() == 1L)) {
             if (!i) {
-               divid_ss << m_args[i]->print();
+               divid_ss << m_args[i]->_string();
             } else {
-               divis_ss << m_args[i]->print();
+               divis_ss << m_args[i]->_string();
                divis_count++;
             }
          } else {
@@ -386,18 +370,18 @@ Term Div::simplify() {
                   }
                }
                continue;
-            } else if (simpl.is_primitive() || (simpl.fkt()->term().size() == 1L)) {
+            } else if (simpl.is_primitive() || (simpl.fkt()->args().size() == 1L)) {
                if (!i) {
-                  divid_ss << simpl.print();
+                  divid_ss << simpl._string();
                } else {
-                  divis_ss << simpl.print();
+                  divis_ss << simpl._string();
                   divis_count++;
                }
             } else {
                if (!i) {
-                  divid_ss << term_bracket[0] << m_args[i]->simplify().print() << term_bracket[1];
+                  divid_ss << term_bracket[0] << m_args[i]->simplify()._string() << term_bracket[1];
                } else {
-                  divis_ss << term_bracket[0] << m_args[i]->simplify().print() << term_bracket[1];
+                  divis_ss << term_bracket[0] << m_args[i]->simplify()._string() << term_bracket[1];
                   divis_count++;
                }
             }
@@ -435,11 +419,7 @@ Term Div::simplify() {
 
 
 /** Pow */
-Pow::Pow(const vector<string> &term_str) : Function() {
-   for (unsigned long i=0; i<term_str.size(); i++) {
-      m_args.push_back(new Term(term_str[i]));
-   }
-}
+Pow::Pow(const vector<string> &term_str) : Function(term_str) {}
 
 const string Pow::name("^");
 
@@ -448,11 +428,11 @@ Term Pow::derivate(const Term &var) {
 
 // Term simpl_arg = simplify();     /* Ab jetzt gibt es nur noch x^y */
 //
-// if (simpl_arg.is_primitive() || (simpl_arg.fkt()->term().size() == 1L) || (simpl_arg.fkt()->get_name().compare(Pow::name) != 0L)) {
-//    deriv_ss << simpl_arg.derivate(var).print();
+// if (simpl_arg.is_primitive() || (simpl_arg.fkt()->args().size() == 1L) || (simpl_arg.fkt()->_name().compare(Pow::name) != 0L)) {
+//    deriv_ss << simpl_arg.derivate(var)._string();
 // } else {
-//    Term x = *simpl_arg.fkt()->term()[0];
-//    Term y = *simpl_arg.fkt()->term()[1];
+//    Term x = *simpl_arg.fkt()->args()[0];
+//    Term y = *simpl_arg.fkt()->args()[1];
 //    Term du = u.derivate(var);
 //    Term dv = v.derivate(var);
 //
@@ -464,44 +444,44 @@ Term Pow::derivate(const Term &var) {
 //
 //    deriv_ss << term_bracket[0];
 //    deriv_ss << Minus::name;
-//    if (u.is_primitive() || (u.fkt()->term().size() == 1L)) {
-//       deriv_ss << u.print();
+//    if (u.is_primitive() || (u.fkt()->args().size() == 1L)) {
+//       deriv_ss << u._string();
 //    } else {
-//       deriv_ss << term_bracket[0] << u.print() << term_bracket[1];
+//       deriv_ss << term_bracket[0] << u._string() << term_bracket[1];
 //    }
 //    deriv_ss << Mult::name;
-//    if ((dv.is_primitive() && (dv.num() >= 0.0)) || (!dv.is_primitive() && (dv.fkt()->term().size() == 1L))) {
-//       deriv_ss << dv.print();
+//    if ((dv.is_primitive() && (dv.num() >= 0.0)) || (!dv.is_primitive() && (dv.fkt()->args().size() == 1L))) {
+//       deriv_ss << dv._string();
 //    } else {
-//       deriv_ss << term_bracket[0] << dv.print() << term_bracket[1];
+//       deriv_ss << term_bracket[0] << dv._string() << term_bracket[1];
 //    }
 //    deriv_ss << Plus::name;
-//    if (du.is_primitive() || (du.fkt()->term().size() == 1L)) {
-//       deriv_ss << du.print();
+//    if (du.is_primitive() || (du.fkt()->args().size() == 1L)) {
+//       deriv_ss << du._string();
 //    } else {
-//       deriv_ss << term_bracket[0] << du.print() << term_bracket[1];
+//       deriv_ss << term_bracket[0] << du._string() << term_bracket[1];
 //    }
 //    deriv_ss << Mult::name;
-//    if ((v.is_primitive() && (dv.num() >= 0.0)) || (!v.is_primitive() && (v.fkt()->term().size() == 1L))) {
-//       deriv_ss << v.print() << term_bracket[1] << Div::name << term_bracket[0] << v.print() << Mult::name << v.print() << term_bracket[1];
+//    if ((v.is_primitive() && (dv.num() >= 0.0)) || (!v.is_primitive() && (v.fkt()->args().size() == 1L))) {
+//       deriv_ss << v._string() << term_bracket[1] << Div::name << term_bracket[0] << v._string() << Mult::name << v._string() << term_bracket[1];
 //    } else {
-//       deriv_ss << term_bracket[0] << v.print() << term_bracket[1] << term_bracket[1] << Div::name << term_bracket[0] << term_bracket[0] << v.print() << term_bracket[1] << Mult::name << term_bracket[0] << v.print() << term_bracket[1] << term_bracket[1];
+//       deriv_ss << term_bracket[0] << v._string() << term_bracket[1] << term_bracket[1] << Div::name << term_bracket[0] << term_bracket[0] << v._string() << term_bracket[1] << Mult::name << term_bracket[0] << v._string() << term_bracket[1] << term_bracket[1];
 //    }
 // }
 //
 // for (unsigned long i=0; i<m_args.size(); i++) {
 //    Term deriv_arg = m_args[i]->derivate(var);
-//    if ((deriv_arg.is_primitive() && (!i || (deriv_arg.num() >= 0.0))) || (!deriv_arg.is_primitive() && (deriv_arg.fkt()->term().size() == 1L))) {
-//       deriv_ss << deriv_arg.print();
+//    if ((deriv_arg.is_primitive() && (!i || (deriv_arg.num() >= 0.0))) || (!deriv_arg.is_primitive() && (deriv_arg.fkt()->args().size() == 1L))) {
+//       deriv_ss << deriv_arg._string();
 //    } else {
-//       deriv_ss << term_bracket[0] << deriv_arg.print() << term_bracket[1];
+//       deriv_ss << term_bracket[0] << deriv_arg._string() << term_bracket[1];
 //    }
 //    for (unsigned long j=0; j<m_args.size(); j++) {
 //       if (i==j) { continue; }
-//       if ((m_args[j]->is_primitive() && (m_args[j]->num() >= 0.0)) || (!m_args[j]->is_primitive() && (m_args[j]->fkt()->term().size() == 1L))) {
-//          deriv_ss << Mult::name << m_args[j]->print();
+//       if ((m_args[j]->is_primitive() && (m_args[j]->num() >= 0.0)) || (!m_args[j]->is_primitive() && (m_args[j]->fkt()->args().size() == 1L))) {
+//          deriv_ss << Mult::name << m_args[j]->_string();
 //       } else {
-//          deriv_ss << Mult::name << term_bracket[0] << m_args[j]->print() << term_bracket[1];
+//          deriv_ss << Mult::name << term_bracket[0] << m_args[j]->_string() << term_bracket[1];
 //       }
 //    }
 //    if (i < m_args.size()-1) {
@@ -517,10 +497,10 @@ Term Pow::evaluate(const Term &var, const Term &val) {
 
 // for (unsigned long i=0; i<m_args.size(); i++) {
 //    Term eval_arg = m_args[i]->evaluate(var,val);
-//    if ((eval_arg.is_primitive() && (!i || (eval_arg.num() >= 0.0))) || (!eval_arg.is_primitive() && (eval_arg.fkt()->term().size() == 1L))) {
-//       eval_ss << eval_arg.print();
+//    if ((eval_arg.is_primitive() && (!i || (eval_arg.num() >= 0.0))) || (!eval_arg.is_primitive() && (eval_arg.fkt()->args().size() == 1L))) {
+//       eval_ss << eval_arg._string();
 //    } else {
-//       eval_ss << term_bracket[0] << eval_arg.print() << term_bracket[1];
+//       eval_ss << term_bracket[0] << eval_arg._string() << term_bracket[1];
 //    }
 //    if (i < m_args.size()-1) {
 //       eval_ss << Pow::name;
@@ -538,18 +518,18 @@ Term Pow::simplify() {
 // for (unsigned long i=0; i<m_args.size(); i++) {
 //    if (m_args[i]->is_numeric()) {
 //       prod *= m_args[i]->num();
-//    } else if (m_args[i]->is_primitive() || (m_args[i]->fkt()->term().size() == 1L)) {
+//    } else if (m_args[i]->is_primitive() || (m_args[i]->fkt()->args().size() == 1L)) {
 //       only_numeric = false;
-//       simpl_ss << m_args[i]->print() << Mult::name;
+//       simpl_ss << m_args[i]->_string() << Mult::name;
 //    } else {
 //          Term simpl = m_args[i]->simplify();
 //          if (simpl.is_numeric()) {
 //             prod *= simpl.num();
 //             continue;
-//          } else if (simpl.is_primitive() || (simpl.fkt()->term().size() == 1L)) {
-//             simpl_ss << simpl.print() << Mult::name;
+//          } else if (simpl.is_primitive() || (simpl.fkt()->args().size() == 1L)) {
+//             simpl_ss << simpl._string() << Mult::name;
 //          } else {
-//             simpl_ss << term_bracket[0] << simpl.print() << term_bracket[1] << Mult::name;
+//             simpl_ss << term_bracket[0] << simpl._string() << term_bracket[1] << Mult::name;
 //          }
 //       only_numeric = false;
 //    }

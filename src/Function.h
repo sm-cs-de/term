@@ -7,131 +7,138 @@
 
 inline std::string function_derivate_inner(Term &fkt_arg, const Term &var);
 inline std::string function_evaluate(Term &fkt_arg, const std::string &fkt_name, const Term &var, const Term &val);
-inline std::string function_simplify(Term &fkt_arg, const std::string &fkt_name, double (*const fkt)(double));
+inline std::string function_simplify(Term &fkt_arg, const std::string &fkt_name, double(*const fkt)(double));
 
 
 class Function {
-	public:
-		virtual Term derivate(const Term &var) = 0;
-		virtual Term evaluate(const Term &var, const Term &val) = 0;
-		virtual Term simplify() = 0;
+   public:
+      virtual Term derivate(const Term &var) = 0;
+      virtual Term evaluate(const Term &var, const Term &val) = 0;
+      virtual Term simplify() = 0;
 
-		const std::vector<Term *> &term() const { return m_args; }
-		virtual const std::string &get_name() const = 0;
+      inline const std::vector<Term *> &args() const { return m_args; }
+      virtual inline const std::string &_name() const = 0;
 
-	protected:
-		Function();
-		std::vector<Term *> m_args;
+   protected:
+      Function(const std::vector<std::string> &term_str);
+      Function(const std::string &term_str);
+
+      std::vector<Term *> m_args;
 };
 
+
+/** Operatoren */
+
 class Plus : public Function {
-	public:
-		Plus(const std::vector<std::string> &term_str);
+   public:
+      Plus(const std::vector<std::string> &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Minus : public Function {
-	public:
-		Minus(const std::vector<std::string> &term_str);
+   public:
+      Minus(const std::vector<std::string> &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Mult : public Function {
-	public:
-		Mult(const std::vector<std::string> &term_str);
+   public:
+      Mult(const std::vector<std::string> &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Div : public Function {
-	public:
-		Div(const std::vector<std::string> &term_str);
+   public:
+      Div(const std::vector<std::string> &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Pow : public Function {
-	public:
-		Pow(const std::vector<std::string> &term_str);
+   public:
+      Pow(const std::vector<std::string> &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
+
+/** Funktionen (1 Parameter) */
+
 class Exp : public Function {
-	public:
-		Exp(const std::string &term_str);
+   public:
+      Exp(const std::string &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Sin : public Function {
-	public:
-		Sin(const std::string &term_str);
+   public:
+      Sin(const std::string &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Cos : public Function {
-	public:
-		Cos(const std::string &term_str);
+   public:
+      Cos(const std::string &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
 
 class Tan : public Function {
-	public:
-		Tan(const std::string &term_str);
+   public:
+      Tan(const std::string &term_str);
 
-		static const std::string name;
-		virtual inline const std::string &get_name() const { return name; }
+      static const std::string name;
+      virtual inline const std::string &_name() const { return name; }
 
-		virtual Term derivate(const Term &var);
-		virtual Term evaluate(const Term &var, const Term &val);
-		virtual Term simplify();
+      virtual Term derivate(const Term &var);
+      virtual Term evaluate(const Term &var, const Term &val);
+      virtual Term simplify();
 };
-
 
 
 //#undef acos

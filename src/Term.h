@@ -19,7 +19,7 @@ class Term {
 		Term evaluate(const Term &var, const Term &val) const;
 		Term &simplify();
 
-		inline const std::string &print() const { return m_string; }
+		inline const std::string &_string() const { return m_string; }
 		inline const Function *fkt() const { return m_fkt; }
 		inline bool is_primitive() const { return m_is_primitive; }
 		inline bool is_numeric() const { return m_is_numeric; }

@@ -24,13 +24,13 @@ int main(int argc, char *argv[]) {
 //		Term var("x"), val("1.1");
 
 //		cout << COL_HLP << "simpl:" << COL_CLR << endl;
-//		cout << COL_HLP << input.simplify().print() << COL_CLR << endl;
+//		cout << COL_HLP << input.simplify()._string() << COL_CLR << endl;
 
 //		cout << COL_HLP << "eval:" << COL_CLR << endl;
-//		cout << COL_HLP << input.evaluate(var, val).print() << COL_CLR << endl;
+//		cout << COL_HLP << input.evaluate(var, val)._string() << COL_CLR << endl;
 
 //		cout << COL_HLP << "deriv:" << COL_CLR << endl;
-//		cout << COL_HLP << input.derivate(var).print() << COL_CLR << endl;
+//		cout << COL_HLP << input.derivate(var)._string() << COL_CLR << endl;
 
 
 	} catch (Error *exc) {

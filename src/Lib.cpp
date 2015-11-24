@@ -42,7 +42,7 @@ void Lib::create(const string &basename, const bool delete_tmp) {
 
 string Lib::get_names() {
    if (!m_name.size()) {
-      m_name = m_term->print();
+      m_name = m_term->_string();
       replace_substring(&m_name,"/",":");
    }
 
@@ -61,12 +61,12 @@ void Lib::get_args() {
    do {
       Term *term = terms[idx];
       if (term->is_primitive()) {
-         if (!term->is_numeric() && (constants.find(term->print())==constants.end())) {
-            m_args.push_back(term->print());
+         if (!term->is_numeric() && (constants.find(term->_string())==constants.end())) {
+            m_args.push_back(term->_string());
          }
       } else {
-         for (unsigned long i=0; i<term->fkt()->term().size(); i++) {
-            terms.push_back(term->fkt()->term()[i]);
+         for (unsigned long i=0; i<term->fkt()->args().size(); i++) {
+            terms.push_back(term->fkt()->args()[i]);
          }
       }
 
@@ -147,7 +147,7 @@ void Lib::create_evaluate(ofstream &ofs, const bool only_head) const {
    }
    ofs << "{" << endl;
 
-   string expr = m_term->print();
+   string expr = m_term->_string();
    replace_term_symbols(&expr);
    ofs << "return (" << expr << ");" << endl;
 
@@ -182,7 +182,7 @@ void Lib::create_derivate(ofstream &ofs, const bool only_head) const {
       }
       string expr;
       for (unsigned long i=0; i<m_args.size(); i++) {
-         expr = m_term->derivate(Term(m_args[i])).print();
+         expr = m_term->derivate(Term(m_args[i]))._string();
          replace_term_symbols(&expr);
 
          if (m_args.size() > 1L) {
