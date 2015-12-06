@@ -4,7 +4,7 @@
 #include "Main.hpp"
 #include "Term.hpp"
 #include "Function.hpp"
-#include "Symbols.hpp"
+#include "Parse.hpp"
 
 
 class Lib {

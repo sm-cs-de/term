@@ -2,7 +2,7 @@ Debug/*
 Release/*
 Term.*
 
-src/Symbols.hpp
+src/Parse.hpp
 src/Parse.l
 src/Parse.l.cpp
 src/Parse.l.hpp

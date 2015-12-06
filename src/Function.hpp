@@ -3,7 +3,7 @@
 
 #include "Main.hpp"
 #include "Term.hpp"
-#include "Symbols.hpp"
+#include "Parse.hpp"
 
 
 inline std::string function_derivate_inner(Term &fkt_arg, const Term &var);

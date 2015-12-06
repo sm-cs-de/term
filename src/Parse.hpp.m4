@@ -1,5 +1,5 @@
-#ifndef TERM_SYMBOLS_H
-#define TERM_SYMBOLS_H
+#ifndef TERM_PARSE_HPP
+#define TERM_PARSE_HPP
 
 
 /* Klammern */
