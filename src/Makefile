@@ -5,12 +5,12 @@ PRS = Parse
 
 # Eingabe:
 #	$(SYM).m4		--	Symbole und Namen zur Ersetzung (m4).
-#	$(SYM).h.m4		--	Symbol-Header-Template.
+#	$(SYM).hpp.m4	--	Symbol-Header-Template.
 #	$(PRS).l.m4		--  Flex-Template.
 #	$(PRS).y		--	Bison-Datei
 
 # Ausgabe:
-#	$(SYM).h		-- Symbol-Header.
+#	$(SYM).hpp  	-- Symbol-Header.
 #	$(PRS).l		-- Flex-Datei
 #	$(PRS).y.cpp	-- Bison-Code
 #	$(PRS).y.hpp	-- Bison-Header
@@ -22,11 +22,11 @@ parse: clean m4 bison flex
 
 
 clean:
-	rm -f $(SYM).h $(PRS).l $(PRS).y.cpp $(PRS).y.hpp $(PRS).l.cpp $(PRS).l.hpp
+	rm -f $(SYM).hpp $(PRS).l $(PRS).y.cpp $(PRS).y.hpp $(PRS).l.cpp $(PRS).l.hpp
 
 
-m4: $(SYM).m4  $(SYM).h.m4  $(PRS).l.m4
-	m4 $(SYM).m4 $(SYM).h.m4 > $(SYM).h
+m4: $(SYM).m4  $(SYM).hpp.m4  $(PRS).l.m4
+	m4 $(SYM).m4 $(SYM).hpp.m4 > $(SYM).hpp
 	m4 $(SYM).m4 $(PRS).l.m4 > $(PRS).l
 
 
