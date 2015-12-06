@@ -1,9 +1,9 @@
-#ifndef TERM_FUNCTION_H
-#define TERM_FUNCTION_H
+#ifndef TERM_FUNCTION_HPP
+#define TERM_FUNCTION_HPP
 
-#include "Main.h"
-#include "Term.h"
-#include "Symbols.h"
+#include "Main.hpp"
+#include "Term.hpp"
+#include "Symbols.hpp"
 
 
 inline std::string function_derivate_inner(Term &fkt_arg, const Term &var);

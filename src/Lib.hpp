@@ -1,10 +1,10 @@
-#ifndef TERM_LIB_H
-#define TERM_LIB_H
+#ifndef TERM_LIB_HPP
+#define TERM_LIB_HPP
 
-#include "Main.h"
-#include "Term.h"
-#include "Function.h"
-#include "Symbols.h"
+#include "Main.hpp"
+#include "Term.hpp"
+#include "Function.hpp"
+#include "Symbols.hpp"
 
 
 class Lib {

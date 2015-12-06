@@ -1,6 +1,6 @@
-#include "Main.h"
-#include "Term.h"
-#include "Lib.h"
+#include "Main.hpp"
+#include "Term.hpp"
+#include "Lib.hpp"
 
 
 using namespace std;

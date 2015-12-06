@@ -1,4 +1,4 @@
-#include "Term.h"
+#include "Term.hpp"
 
 
 using namespace std;

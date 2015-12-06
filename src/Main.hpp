@@ -1,5 +1,5 @@
-#ifndef TERM_MAIN_H
-#define TERM_MAIN_H
+#ifndef TERM_MAIN_HPP
+#define TERM_MAIN_HPP
 
 #include <cstdlib>
 #include <cerrno>
