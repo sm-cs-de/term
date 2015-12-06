@@ -35,5 +35,5 @@ bison: $(PRS).y
 
 
 flex: $(PRS).l
-	flex -o $(PRS).l.cpp --header-file=$(PRS).l.hpp -+ $(PRS).l
+	flex++ -o $(PRS).l.cpp --header-file=$(PRS).l.hpp $(PRS).l
 
