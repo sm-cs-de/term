@@ -1,4 +1,10 @@
 Debug/*
 Release/*
 Term.*
+
 src/Symbols.h
+src/Parse.l
+src/Parse.l.cpp
+src/Parse.l.hpp
+src/Parse.y.cpp
+src/Parse.y.hpp
