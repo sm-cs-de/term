@@ -4,6 +4,35 @@
 using namespace std;
 
 
+Ast::Ast(string fkt_str, Ast *left, Ast *right): m_type(FKT), m_string(fkt_str), m_num(0.0), m_left(left), m_right(right) {}
+
+
+Ast::Ast(string sym_str): m_type(SYM), m_string(sym_str), m_num(0.0), m_left(NULL), m_right(NULL) {}
+
+
+Ast::Ast(double num): m_type(NUM), m_string(""), m_num(num), m_left(NULL), m_right(NULL) {}
+
+
+string Ast::_string() const {
+   stringstream ss;
+   ss << (m_type==NUM ? to_string(m_num) : m_string);
+
+   return ss.str();
+}
+
+
+void Ast::print() const {
+   cout << _string() << endl;
+
+   if (m_left) {
+      m_left->print();
+   }
+   if (m_right) {
+      m_right->print();
+   }
+}
+
+
 void Term::parse() {	cout << "» " << m_string << endl;
 
 	/* Leer oder ungültige Zeichen, Leerzeichen entfernen */

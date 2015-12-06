@@ -4,6 +4,7 @@
 %option noyywrap nodefault yylineno c++
 
 %{
+#include "Main.hpp"
 #include "Parse.y.hpp"
 %}
 
@@ -59,7 +60,7 @@ DOT "."
 
  /* Sonstige */
 [ \t]   {}
-.       { printf("Unknown character %s\n", *yytext); abort(); }
+.       { throw new Error(std::string(*yytext)); }
 
 
 %%

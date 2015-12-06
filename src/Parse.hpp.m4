@@ -1,6 +1,8 @@
 #ifndef TERM_PARSE_HPP
 #define TERM_PARSE_HPP
 
+#include "Main.hpp"
+
 
 /* Klammern */
 static const std::string term_bracket("SYM_TERM_BRA()SYM_TERM_KET()");
@@ -35,6 +37,26 @@ static const std::map<std::string,double> constants = {
    {"SYM_M_2_SQRTPI()", M_2_SQRTPI},
    {"SYM_M_SQRT2()",    M_SQRT2},
    {"SYM_M_SQRT1_2()",  M_SQRT1_2}
+};
+
+
+/* Abstrakter-Syntax-Baum (AST) */
+class Ast {
+   public:
+      enum Type { FKT, SYM, NUM } m_type;
+
+      Ast(std::string fkt_str, Ast *left, Ast *right);
+      Ast(std::string sym_str);
+      Ast(double num);
+
+      std::string _string() const;
+      void print() const;
+
+      std::string m_string;
+      double m_num;
+
+      class Ast *m_left;
+      class Ast *m_right;
 };
 
 

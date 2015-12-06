@@ -1,50 +1,51 @@
  /* Parser-Regeln */
 
 %{
+#include "Parse.hpp"
 #include "Parse.y.hpp"
 #include "Parse.l.hpp"
 %}
 
 
  /* Klammern */
-%token TERM_BRA
-%token TERM_KET
-%token FUNC_BRA
-%token FUNC_KET
+%token _TERM_BRA
+%token _TERM_KET
+%token _FUNC_BRA
+%token _FUNC_KET
 
 
  /* Operatoren + Funktionen */
-%token PLUS
-%token MINUS
-%token MULT
-%token DIV
-%token POW
+%token _PLUS
+%token _MINUS
+%token _MULT
+%token _DIV
+%token _POW
 
-%token EXP
-%token SIN
-%token COS
-%token TAN
+%token _EXP
+%token _SIN
+%token _COS
+%token _TAN
 
 
  /* Konstanten */
-%token M_E
-%token M_LOG2E
-%token M_LOG10E
-%token M_LN2
-%token M_LN10
-%token M_PI
-%token M_PI_2
-%token M_PI_4
-%token M_1_PI
-%token M_2_PI
-%token M_2_SQRTPI
-%token M_SQRT2
-%token M_SQRT1_2
+%token _M_E
+%token _M_LOG2E
+%token _M_LOG10E
+%token _M_LN2
+%token _M_LN10
+%token _M_PI
+%token _M_PI_2
+%token _M_PI_4
+%token _M_1_PI
+%token _M_2_PI
+%token _M_2_SQRTPI
+%token _M_SQRT2
+%token _M_SQRT1_2
 
 
  /* Zahlen + Symbole */
-%token NUM
-%token SYM
+%token _NUM
+%token _SYM
 
 
 %%
@@ -55,6 +56,4 @@ list: {}
 
 
 %%
-
-
 
