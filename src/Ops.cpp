@@ -7,7 +7,7 @@ using namespace std;
 /** Plus */
 Plus::Plus(const vector<string> &term_str) : Function(term_str) {}
 
-const string Plus::name("+");
+const string Plus::name(PLUS_NAME);
 
 Term Plus::derivate(const Term &var) {
    stringstream deriv_ss;
@@ -76,7 +76,7 @@ Term Plus::simplify() {
 /** Minus */
 Minus::Minus(const vector<string> &term_str) : Function(term_str) {}
 
-const string Minus::name("-");
+const string Minus::name(MINUS_NAME);
 
 Term Minus::derivate(const Term &var) {
    stringstream deriv_ss;
@@ -175,7 +175,7 @@ Term Minus::simplify() {
 /** Mult */
 Mult::Mult(const vector<string> &term_str) : Function(term_str) {}
 
-const string Mult::name("*");
+const string Mult::name(MULT_NAME);
 
 Term Mult::derivate(const Term &var) {
    stringstream deriv_ss;
@@ -264,7 +264,7 @@ Term Mult::simplify() {
 /** Div */
 Div::Div(const vector<string> &term_str) : Function(term_str) {}
 
-const string Div::name("/");
+const string Div::name(DIV_NAME);
 
 Term Div::derivate(const Term &var) {
    stringstream deriv_ss;
@@ -421,7 +421,7 @@ Term Div::simplify() {
 /** Pow */
 Pow::Pow(const vector<string> &term_str) : Function(term_str) {}
 
-const string Pow::name("^");
+const string Pow::name(POW_NAME);
 
 Term Pow::derivate(const Term &var) {
    stringstream deriv_ss;

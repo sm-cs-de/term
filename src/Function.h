@@ -3,11 +3,12 @@
 
 #include "Main.h"
 #include "Term.h"
+#include "Symbols.h"
 
 
 inline std::string function_derivate_inner(Term &fkt_arg, const Term &var);
 inline std::string function_evaluate(Term &fkt_arg, const std::string &fkt_name, const Term &var, const Term &val);
-inline std::string function_simplify(Term &fkt_arg, const std::string &fkt_name, double(*const fkt)(double));
+inline std::string function_simplify(Term &fkt_arg, const std::string &fkt_name, double (*const fkt)(double));
 
 
 class Function {

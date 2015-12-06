@@ -85,10 +85,10 @@ void Term::parse_initial() {
 	if (!m_string.size()) {
 		throw new Error("Leerer Term !");
 	}  else {
-		size_t bad_pos = m_string.find_first_of(bad_keywords);
-		if (bad_pos != string::npos) {
-			throw new Error(string("Ungültiges Zeichen ") + COL_ERR + m_string[bad_pos] + COL_CLR + " im Ausdruck !");
-		}
+//		size_t bad_pos = m_string.find_first_of(bad_keywords);
+//		if (bad_pos != string::npos) {
+//			throw new Error(string("Ungültiges Zeichen ") + COL_ERR + m_string[bad_pos] + COL_CLR + " im Ausdruck !");
+//		}
 	}
 
 	stringstream ss;

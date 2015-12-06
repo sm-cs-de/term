@@ -4,6 +4,7 @@
 #include "Main.h"
 #include "Term.h"
 #include "Function.h"
+#include "Symbols.h"
 
 
 class Lib {

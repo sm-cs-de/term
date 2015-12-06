@@ -3,12 +3,7 @@
 
 #include "Main.h"
 #include "Function.h"
-
-
-static const std::string term_bracket("()");										// Einstellig jeweils
-static const std::string function_bracket("[]");								// Einstellig jeweils
-static const std::string subterm_replace("|");									// Einstellig
-static const std::string bad_keywords(subterm_replace + "{}\\=\'\",:;<>");
+#include "Symbols.h"
 
 
 class Term {
@@ -41,23 +36,6 @@ class Term {
 		void parse_subterms(std::vector<std::string> &subterms, std::vector<std::string> &ops, const std::vector<long> &level, const std::vector<long> &function_level) const;
 		void create(const std::vector<std::string> &subterms, const std::vector<std::string> &ops);
 		std::vector<std::string> get_multi_args(const std::vector<std::string> &subterms, const std::string &op_name) const;
-};
-
-
-static const std::map<std::string,double> constants = {
-	{"M_E",	      M_E},
-	{"M_LOG2E", 	M_LOG2E},
-	{"M_LOG10E",   M_LOG10E},
-	{"M_LN2",	   M_LN2},
-	{"M_LN10",  	M_LN10},
-	{"M_PI",	      M_PI},
-	{"M_PI_2",  	M_PI_2},
-	{"M_PI_4",	   M_PI_4},
-	{"M_1_PI",  	M_1_PI},
-	{"M_2_PI",	   M_2_PI},
-	{"M_2_SQRTPI",	M_2_SQRTPI},
-	{"M_SQRT2",	   M_SQRT2},
-	{"M_SQRT1_2",	M_SQRT1_2}
 };
 
 

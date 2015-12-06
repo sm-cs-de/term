@@ -57,7 +57,7 @@ Function::Function(const string &term_str) {
 /** Exp */
 Exp::Exp(const string &term_str) : Function(term_str) {}
 
-const string Exp::name("Exp");
+const string Exp::name(EXP_NAME);
 
 Term Exp::derivate(const Term &var) {
 	stringstream deriv_ss;
@@ -80,7 +80,7 @@ Term Exp::simplify() {
 /** Sin */
 Sin::Sin(const string &term_str) : Function(term_str) {}
 
-const string Sin::name("Sin");
+const string Sin::name(SIN_NAME);
 
 Term Sin::derivate(const Term &var) {
 	stringstream deriv_ss;
@@ -103,7 +103,7 @@ Term Sin::simplify() {
 /** Cos */
 Cos::Cos(const string &term_str) :Function(term_str) {}
 
-const string Cos::name("Cos");
+const string Cos::name(COS_NAME);
 
 Term Cos::derivate(const Term &var) {
 	stringstream deriv_ss;
@@ -126,7 +126,7 @@ Term Cos::simplify() {
 /** Tan */
 Tan::Tan(const string &term_str) : Function(term_str) {}
 
-const string Tan::name("Tan");
+const string Tan::name(TAN_NAME);
 
 Term Tan::derivate(const Term &var) {
 	stringstream deriv_ss;
