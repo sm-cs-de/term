@@ -1,11 +1,14 @@
 #include "Term.hpp"
+#include "Parse.l.hpp"
 
 
 using namespace std;
 
 
 Term::Term(const string &term_str) : m_fkt(NULL), m_is_primitive(false), m_string(term_str), m_is_numeric(false), m_num(0.0) {
+   YY_BUFFER_STATE buffer = yy_scan_string(term_str.c_str());
    yyparse();
+   yy_delete_buffer(buffer);
 }
 
 Term Term::derivate(const Term &var) const {

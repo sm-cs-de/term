@@ -46,11 +46,12 @@ static const std::map<std::string,double> constants = {
 /* Abstrakter-Syntax-Baum (AST) */
 class Ast {
    public:
-      enum Type { FKT, SYM, NUM } m_type;
+      enum Type { FCT, SYM, NUM } m_type;
 
-      Ast(const char *const fkt_str, Ast *const left, Ast *const right);
-      Ast(const char *const sym_str);
-      Ast(const double num);
+      Ast(const char *const op_str,  Ast *const left, Ast *const right);   /* Operatoren */
+      Ast(const char *const fct_str, Ast *const arg);                      /* Funktionen */
+      Ast(const char *const sym_str);                                      /* Symbole + Konstanten */
+      Ast(const double num);                                               /* Zahlen */
 
       std::string _string() const;
       void print() const;
@@ -58,6 +59,7 @@ class Ast {
       std::string m_string;
       double m_num;
 
+      class Ast *m_arg;
       class Ast *m_left;
       class Ast *m_right;
 };

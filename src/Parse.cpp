@@ -9,15 +9,20 @@ void yyerror(std::string error) {
 }
 
 
-Ast::Ast(const char *const fkt_str, Ast *const left, Ast *const right):
-   m_type(FKT), m_string(string(fkt_str)), m_num(0.0), m_left(left), m_right(right) {}
+Ast::Ast(const char *const op_str, Ast *const left, Ast *const right):
+   m_type(FCT), m_string(string(op_str)), m_num(0.0), m_arg(NULL), m_left(left), m_right(right) {}
+
+
+Ast::Ast(const char *const fct_str, Ast *const arg):
+   m_type(FCT), m_string(string(fct_str)), m_num(0.0), m_arg(arg), m_left(NULL), m_right(NULL) {}
 
 
 Ast::Ast(const char *const sym_str):
-   m_type(SYM), m_string(string(sym_str)), m_num(0.0), m_left(NULL), m_right(NULL) {}
+   m_type(SYM), m_string(string(sym_str)), m_num(0.0), m_arg(NULL), m_left(NULL), m_right(NULL) {}
 
 
-Ast::Ast(const double num): m_type(NUM), m_string(""), m_num(num), m_left(NULL), m_right(NULL) {}
+Ast::Ast(const double num):
+   m_type(NUM), m_string(""), m_num(num), m_arg(NULL), m_left(NULL), m_right(NULL) {}
 
 
 string Ast::_string() const {
@@ -31,6 +36,9 @@ string Ast::_string() const {
 void Ast::print() const {
    cout << _string() << endl;
 
+   if (m_arg) {
+      m_arg->print();
+   }
    if (m_left) {
       m_left->print();
    }
