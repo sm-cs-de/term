@@ -1,16 +1,23 @@
-#include "Term.hpp"
+#include "Parse.hpp"
 
 
 using namespace std;
 
 
-Ast::Ast(string fkt_str, Ast *left, Ast *right): m_type(FKT), m_string(fkt_str), m_num(0.0), m_left(left), m_right(right) {}
+void yyerror(std::string error) {
+   throw new Error(string("Ungültiger Ausdruck '") + COL_HLP + error + COL_CLR + "' !");
+}
 
 
-Ast::Ast(string sym_str): m_type(SYM), m_string(sym_str), m_num(0.0), m_left(NULL), m_right(NULL) {}
+Ast::Ast(const char *const fkt_str, Ast *const left, Ast *const right):
+   m_type(FKT), m_string(string(fkt_str)), m_num(0.0), m_left(left), m_right(right) {}
 
 
-Ast::Ast(double num): m_type(NUM), m_string(""), m_num(num), m_left(NULL), m_right(NULL) {}
+Ast::Ast(const char *const sym_str):
+   m_type(SYM), m_string(string(sym_str)), m_num(0.0), m_left(NULL), m_right(NULL) {}
+
+
+Ast::Ast(const double num): m_type(NUM), m_string(""), m_num(num), m_left(NULL), m_right(NULL) {}
 
 
 string Ast::_string() const {

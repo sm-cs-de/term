@@ -2,6 +2,9 @@
 #define TERM_PARSE_HPP
 
 #include "Main.hpp"
+#include "Term.hpp"
+void yyerror(std::string error);
+int yyparse();
 
 
 /* Klammern */
@@ -45,9 +48,9 @@ class Ast {
    public:
       enum Type { FKT, SYM, NUM } m_type;
 
-      Ast(std::string fkt_str, Ast *left, Ast *right);
-      Ast(std::string sym_str);
-      Ast(double num);
+      Ast(const char *const fkt_str, Ast *const left, Ast *const right);
+      Ast(const char *const sym_str);
+      Ast(const double num);
 
       std::string _string() const;
       void print() const;

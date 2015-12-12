@@ -1,6 +1,20 @@
 divert(-1)
 changecom(//)
 
+// Hinzufügen eines neuen Symbols / Operators / Funktionsnamens:
+// 1. Hier ein geeignetes m4-Macro mit entsprechendem Text definieren.
+// 2. Mit diesem Macro in `Parse.hpp.m4` einen entsprechenden Namen bzw. eine Konstante definieren.
+// 3. Mit diesem Macro in `Parse.l.m4` ein entsprechendes Token anlegen.
+// 4. Das Token in `Parse.y` aufführen und die Gramatik festlegen.
+// 5. Anschließend das Funktions"= oder Operator"=Klassenobjekt deklarieren bzw. das Symbol entsprechend verwenden.
+
+// Build-Ablauf:
+// - Hier werden die Symbole für den Lexer und den Code definiert.
+// - m4 erzeugt dann das entsprechende Lexer-File (`Parse.l`) und den Code-Header (`Parse.hpp`).
+// - Aus `Parse.l` und `Parse.y` wird dann der Parser erzeugt.
+// - `Parse.hpp` dient zur Verwendung im Code.
+// - Die Erzeugung des Parser-Code's wird durch das Makefile gesteuert.
+
 
 define(`SYM_TERM_BRA',  `(')dnl
 define(`SYM_TERM_KET',  `)')dnl

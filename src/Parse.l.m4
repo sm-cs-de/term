@@ -1,10 +1,10 @@
  /* Parser-Token */
 
 
-%option noyywrap nodefault yylineno c++
+%option noyywrap nodefault align debug
 
 %{
-#include "Main.hpp"
+#include "Parse.hpp"
 #include "Parse.y.hpp"
 %}
 
@@ -54,13 +54,13 @@ DOT "."
 
  /* Zahlen + Symbole */
 [0-9]+{DOT}[0-9]*{EXP}? |
-{DOT}?[0-9]+{EXP}?      { return _NUM; }
+{DOT}?[0-9]+{EXP}?      { yylval.ast = new Ast(yytext); return _NUM; }
 ({TXT}+[0-9]*)+         { return _SYM; }
 
 
  /* Sonstige */
 [ \t]   {}
-.       { throw new Error(std::string(*yytext)); }
+.       { yyerror(yytext); }
 
 
 %%

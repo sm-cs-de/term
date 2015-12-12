@@ -3,8 +3,16 @@
 %{
 #include "Parse.hpp"
 #include "Parse.y.hpp"
-#include "Parse.l.hpp"
+#include "Parse.l.hpp" // für yylex()
 %}
+
+
+%union {
+   Ast *ast;
+}
+
+%type <ast> sum
+//%type <ast> prod
 
 
  /* Klammern */
@@ -15,7 +23,7 @@
 
 
  /* Operatoren + Funktionen */
-%token _PLUS
+%token <ast> _PLUS
 %token _MINUS
 %token _MULT
 %token _DIV
@@ -44,15 +52,19 @@
 
 
  /* Zahlen + Symbole */
-%token _NUM
+%token<ast> _NUM
 %token _SYM
 
 
 %%
 
 
-list: {}
+term:
+    | term sum { $2->print(); }
     ;
+
+sum : _NUM _PLUS _NUM { $$ = new Ast("+",$1,$2); }
+
 
 
 %%

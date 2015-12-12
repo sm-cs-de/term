@@ -5,7 +5,7 @@ using namespace std;
 
 
 Term::Term(const string &term_str) : m_fkt(NULL), m_is_primitive(false), m_string(term_str), m_is_numeric(false), m_num(0.0) {
-	parse();
+   yyparse();
 }
 
 Term Term::derivate(const Term &var) const {

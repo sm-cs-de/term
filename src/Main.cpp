@@ -16,9 +16,9 @@ int main(int argc, char *argv[]) {
 		string in(argv[1]);
 		Term input(in);
 
-		cout << COL_HLP << "Lib:" << COL_CLR << endl;
-		//Lib *lib = new Lib(&input, "term", false);
-		//cout << COL_HLP << lib->name_file() << COL_CLR << endl;
+//		cout << COL_HLP << "Lib:" << COL_CLR << endl;
+//		Lib *lib = new Lib(&input, "term", false);
+//		cout << COL_HLP << lib->name_file() << COL_CLR << endl;
 
 //		cout << COL_HLP << "var, val:" << COL_CLR << endl;
 //		Term var("x"), val("1.1");
