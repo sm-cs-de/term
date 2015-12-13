@@ -4,17 +4,23 @@
 using namespace std;
 
 
-void yyerror(std::string error) {
+void yyerror(Ast **const ast, std::string error) {
    throw new Error(string("Ungültiger Ausdruck '") + COL_HLP + error + COL_CLR + "' !");
 }
 
 
+void str_alloc(char **const str, const char *const yytext) {
+   *str = (char *) malloc(strlen(yytext)*sizeof(char));
+   strcpy(*str, yytext);
+}
+
+
 Ast::Ast(const char *const op_str, Ast *const left, Ast *const right):
-   m_type(FCT), m_string(string(op_str)), m_num(0.0), m_arg(NULL), m_left(left), m_right(right) {}
+   m_type(FUNC), m_string(string(op_str)), m_num(0.0), m_arg(NULL), m_left(left), m_right(right) {}
 
 
-Ast::Ast(const char *const fct_str, Ast *const arg):
-   m_type(FCT), m_string(string(fct_str)), m_num(0.0), m_arg(arg), m_left(NULL), m_right(NULL) {}
+Ast::Ast(const char *const func_str, Ast *const arg):
+   m_type(FUNC), m_string(string(func_str)), m_num(0.0), m_arg(arg), m_left(NULL), m_right(NULL) {}
 
 
 Ast::Ast(const char *const sym_str):
@@ -26,25 +32,28 @@ Ast::Ast(const double num):
 
 
 string Ast::_string() const {
-   stringstream ss;
-   ss << (m_type==NUM ? to_string(m_num) : m_string);
-
-   return ss.str();
+   if (m_type == NUM) {
+      stringstream ss;
+      ss << to_string(m_num);
+      return ss.str();
+   } else {
+      return m_string;
+   }
 }
 
 
-void Ast::print() const {
-   cout << _string() << endl;
+string Ast::print() const {
+   stringstream ss;
 
    if (m_arg) {
-      m_arg->print();
+      ss << _string() << function_bracket[0] << m_arg->print() << function_bracket[1];
+   } else if (m_left && m_right) {
+      ss << m_left->print() << _string() << m_right->print();
+   } else {
+      ss << _string();
    }
-   if (m_left) {
-      m_left->print();
-   }
-   if (m_right) {
-      m_right->print();
-   }
+
+   return ss.str();
 }
 
 

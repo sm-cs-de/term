@@ -3,16 +3,14 @@
 
 #include "Main.hpp"
 #include "Term.hpp"
-void yyerror(std::string error);
-int yyparse();
 
 
-/* Klammern */
+ /* Klammern */
 static const std::string term_bracket("SYM_TERM_BRA()SYM_TERM_KET()");
 static const std::string function_bracket("SYM_FUNC_BRA()SYM_FUNC_KET()");
 
 
-/* Makro's für Funktionsnamen, damit nicht die *.cpp mit m4 übersetzt werden muss */
+ /* Makro's für Funktionsnamen, damit nicht die *.cpp mit m4 übersetzt werden muss */
 #define PLUS_NAME    "SYM_PLUS()"
 #define MINUS_NAME   "SYM_MINUS()"
 #define MULT_NAME    "SYM_MULT()"
@@ -25,7 +23,7 @@ static const std::string function_bracket("SYM_FUNC_BRA()SYM_FUNC_KET()");
 #define TAN_NAME     "SYM_TAN()"
 
 
-/* Konstanten */
+ /* Konstanten */
 static const std::map<std::string,double> constants = {
    {"SYM_M_E()",        M_E},
    {"SYM_M_LOG2E()",    M_LOG2E},
@@ -43,18 +41,18 @@ static const std::map<std::string,double> constants = {
 };
 
 
-/* Abstrakter-Syntax-Baum (AST) */
+ /* Abstrakter-Syntax-Baum (AST) */
 class Ast {
    public:
-      enum Type { FCT, SYM, NUM } m_type;
+      enum Type { FUNC, SYM, NUM } m_type;
 
-      Ast(const char *const op_str,  Ast *const left, Ast *const right);   /* Operatoren */
-      Ast(const char *const fct_str, Ast *const arg);                      /* Funktionen */
-      Ast(const char *const sym_str);                                      /* Symbole + Konstanten */
-      Ast(const double num);                                               /* Zahlen */
+      Ast(const char *const op_str,  Ast *const left, Ast *const right); // Operatoren
+      Ast(const char *const func_str, Ast *const arg);                   // Funktionen
+      Ast(const char *const sym_str);                                    // Symbole + Konstanten
+      Ast(const double num);                                             // Zahlen
 
       std::string _string() const;
-      void print() const;
+      std::string print() const;
 
       std::string m_string;
       double m_num;
@@ -63,6 +61,12 @@ class Ast {
       class Ast *m_left;
       class Ast *m_right;
 };
+
+
+ /* Linker-Informationen und Hilfsfunktionen für Parser */
+void yyerror(Ast **const ast, std::string error);           // Linker-Info, Erstes Argument nur, weil `%parse-param` in `Parse.y` dies so festlegt.
+int  yyparse(Ast **const ast);                              // Linker-Info
+void str_alloc(char **const str, const char *const yytext); // Allokator für `char *str`, siehe `Parse.y`.
 
 
 #endif

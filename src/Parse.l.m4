@@ -24,16 +24,16 @@ DOT "."
 
 
  /* Operatoren + Funktionen */
-"SYM_PLUS()"        { yylval.str = yytext; return _PLUS;  }
-"SYM_MINUS()"       { yylval.str = yytext; return _MINUS; }
-"SYM_MULT()"        { yylval.str = yytext; return _MULT;  }
-"SYM_DIV()"         { yylval.str = yytext; return _DIV;   }
-"SYM_POW()"         { yylval.str = yytext; return _POW;   }
+"SYM_PLUS()"        { str_alloc(&yylval.str,yytext); return _PLUS;  }
+"SYM_MINUS()"       { str_alloc(&yylval.str,yytext); return _MINUS; }
+"SYM_MULT()"        { str_alloc(&yylval.str,yytext); return _MULT;  }
+"SYM_DIV()"         { str_alloc(&yylval.str,yytext); return _DIV;   }
+"SYM_POW()"         { str_alloc(&yylval.str,yytext); return _POW;   }
 
 "SYM_EXP()"         |
 "SYM_SIN()"         |
 "SYM_COS()"         |
-"SYM_TAN()"         { yylval.str = yytext; return _FUNC;  }
+"SYM_TAN()"         { str_alloc(&yylval.str,yytext); return _FUNC;  }
 
 
  /* Konstanten + Symbole*/
@@ -61,7 +61,7 @@ DOT "."
 
  /* Sonstige */
 [ \t]   {}
-.       { yyerror(yytext); }
+.       { yyerror(NULL,yytext); }
 
 
 %%
