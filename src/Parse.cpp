@@ -57,6 +57,35 @@ string Ast::print() const {
 }
 
 
+string Ast::print_tree() const {
+   stringstream ss;
+
+   const Ast *ast = NULL;
+   queue<const Ast *> ast_func;
+   queue<const Ast *> ast_args;
+   ast_func.push(this);
+
+   while (!ast_func.empty()) {
+      ast = ast_func.front();
+      ast_func.pop();
+
+      if (ast->m_arg) {
+         ast_args.push(ast->m_arg);
+      } else if (ast->m_left && ast->m_right) {
+         ast_args.push(ast->m_left);
+         ast_args.push(ast->m_right);
+      }
+      ss << ast->_string() << " ";
+      if (ast_func.empty() && !ast_args.empty()) {
+         ss << endl;
+         swap(ast_func, ast_args);
+      }
+   }
+
+   return ss.str();
+}
+
+
 void Term::parse() {	cout << "» " << m_string << endl;
 
 	/* Leer oder ungültige Zeichen, Leerzeichen entfernen */

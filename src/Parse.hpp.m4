@@ -53,6 +53,7 @@ class Ast {
 
       std::string _string() const;
       std::string print() const;
+      std::string print_tree() const;
 
       std::string m_string;
       double m_num;
@@ -65,7 +66,7 @@ class Ast {
 
  /* Linker-Informationen und Hilfsfunktionen für Parser */
 void yyerror(Ast **const ast, std::string error);           // Linker-Info, Erstes Argument nur, weil `%parse-param` in `Parse.y` dies so festlegt.
-int  yyparse(Ast **const ast);                              // Linker-Info
+int  yyparse(Ast **const ast);                              // Linker-Info, bzgl. Argument s.o.
 void str_alloc(char **const str, const char *const yytext); // Allokator für `char *str`, siehe `Parse.y`.
 
 

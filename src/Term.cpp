@@ -11,7 +11,7 @@ Term::Term(const string &term_str) : m_fkt(NULL), m_is_primitive(false), m_strin
 
    yyparse(&ast);
    if (ast) {
-      cout << ast->print() << endl;
+      cout << ast->print_tree() << endl;
    }
 
    yy_delete_buffer(buffer);

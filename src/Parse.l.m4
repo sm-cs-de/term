@@ -17,23 +17,23 @@ DOT "."
 
 
  /* Klammern */
-"SYM_TERM_BRA()"    { return _TERM_BRA;  }
-"SYM_TERM_KET()"    { return _TERM_KET;  }
-"SYM_FUNC_BRA()"    { return _FUNC_BRA;  }
-"SYM_FUNC_KET()"    { return _FUNC_KET;  }
+"SYM_TERM_BRA()"    { return TERM_BRA;  }
+"SYM_TERM_KET()"    { return TERM_KET;  }
+"SYM_FUNC_BRA()"    { return FUNC_BRA;  }
+"SYM_FUNC_KET()"    { return FUNC_KET;  }
 
 
  /* Operatoren + Funktionen */
-"SYM_PLUS()"        { str_alloc(&yylval.str,yytext); return _PLUS;  }
-"SYM_MINUS()"       { str_alloc(&yylval.str,yytext); return _MINUS; }
-"SYM_MULT()"        { str_alloc(&yylval.str,yytext); return _MULT;  }
-"SYM_DIV()"         { str_alloc(&yylval.str,yytext); return _DIV;   }
-"SYM_POW()"         { str_alloc(&yylval.str,yytext); return _POW;   }
+"SYM_PLUS()"        { str_alloc(&yylval.str,yytext); return PLUS;  }
+"SYM_MINUS()"       { str_alloc(&yylval.str,yytext); return MINUS; }
+"SYM_MULT()"        { str_alloc(&yylval.str,yytext); return MULT;  }
+"SYM_DIV()"         { str_alloc(&yylval.str,yytext); return DIV;   }
+"SYM_POW()"         { str_alloc(&yylval.str,yytext); return POW;   }
 
 "SYM_EXP()"         |
 "SYM_SIN()"         |
 "SYM_COS()"         |
-"SYM_TAN()"         { str_alloc(&yylval.str,yytext); return _FUNC;  }
+"SYM_TAN()"         { str_alloc(&yylval.str,yytext); return FUNC;  }
 
 
  /* Konstanten + Symbole*/
@@ -50,12 +50,12 @@ DOT "."
 "SYM_M_2_SQRTPI()"  |
 "SYM_M_SQRT2()"     |
 "SYM_M_SQRT1_2()"   |
-({TXT}+[0-9]*)+     { yylval.ast = new Ast(yytext); return _SYM; }
+({TXT}+[0-9]*)+     { yylval.ast = new Ast(yytext); return SYM; }
 
 
  /* Zahlen */
 [0-9]+{DOT}[0-9]*{EXP}? |
-{DOT}?[0-9]+{EXP}?      { yylval.ast = new Ast(atof(yytext)); return _NUM; }
+{DOT}?[0-9]+{EXP}?      { yylval.ast = new Ast(atof(yytext)); return NUM; }
 
 
 
