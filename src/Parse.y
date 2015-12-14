@@ -14,9 +14,7 @@
    char *str;
 }
 
-%type<ast> sum
-%type<ast> prod
-%type<ast> fct
+%type<ast> expr
 
 
  /* Klammern */
@@ -26,11 +24,10 @@
 %token FUNC_KET
 
  /* Operatoren + Funktionen */
-%token<str> PLUS
-%token<str> MINUS
-%token<str> MULT
-%token<str> DIV
-%token<str> POW
+%left<str>  ADD SUB
+%left<str>  MUL DIV
+%right<str> POW
+//%nonassoc
 
 %token<str> FUNC
 
@@ -44,26 +41,22 @@
 %%
 
 
-term:
-    | TERM_BRA term TERM_KET
-    | sum { *ast = $1; }
+term: %empty
+    | expr { *ast = $1; }
     ;
 
-sum : prod
-    | prod PLUS  prod { $$ = new Ast($2,$1,$3); }
-    | prod MINUS prod { $$ = new Ast($2,$1,$3); }
-    ;
 
-prod: fct
-    | fct MULT fct { $$ = new Ast($2,$1,$3); }
-    | fct DIV  fct { $$ = new Ast($2,$1,$3); }
-    ;
-
-fct : NUM
+expr: TERM_BRA expr TERM_KET      { $$ = $2; }
+    | expr ADD expr               { $$ = new Ast($2,$1,$3); }
+    | expr SUB expr               { $$ = new Ast($2,$1,$3); }
+    | expr MUL expr               { $$ = new Ast($2,$1,$3); }
+    | expr DIV expr               { $$ = new Ast($2,$1,$3); }
+    | expr POW expr               { $$ = new Ast($2,$1,$3); }
+    | FUNC FUNC_BRA expr FUNC_KET { $$ = new Ast($1,$3);    }
     | SYM
-    | FUNC FUNC_BRA sum FUNC_KET { $$ = new Ast($1,$3); }
+    | NUM
+//    | OP_UN expr {}
     ;
-
 
 
 %%

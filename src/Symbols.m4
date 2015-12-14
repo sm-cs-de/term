@@ -21,9 +21,9 @@ define(`SYM_TERM_KET',  `)')dnl
 define(`SYM_FUNC_BRA',  `[')dnl
 define(`SYM_FUNC_KET',  `]')dnl
 
-define(`SYM_PLUS',      `+')dnl
-define(`SYM_MINUS',     `-')dnl
-define(`SYM_MULT',      `*')dnl
+define(`SYM_ADD',       `+')dnl
+define(`SYM_SUB',       `-')dnl
+define(`SYM_MUL',       `*')dnl
 define(`SYM_DIV',       `/')dnl
 define(`SYM_POW',       `^')dnl
 

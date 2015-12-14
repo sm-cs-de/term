@@ -31,7 +31,7 @@ m4: $(SYM).m4 $(PRS).hpp.m4 $(PRS).l.m4
 
 
 bison: $(PRS).y
-	bison -o $(PRS).y.cpp -d $(PRS).y
+	bison --warnings=all -o $(PRS).y.cpp -d $(PRS).y
 
 
 flex: $(PRS).l

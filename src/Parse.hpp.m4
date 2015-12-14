@@ -11,9 +11,9 @@ static const std::string function_bracket("SYM_FUNC_BRA()SYM_FUNC_KET()");
 
 
  /* Makro's für Funktionsnamen, damit nicht die *.cpp mit m4 übersetzt werden muss */
-#define PLUS_NAME    "SYM_PLUS()"
-#define MINUS_NAME   "SYM_MINUS()"
-#define MULT_NAME    "SYM_MULT()"
+#define ADD_NAME     "SYM_ADD()"
+#define SUB_NAME     "SYM_SUB()"
+#define MUL_NAME     "SYM_MUL()"
 #define DIV_NAME     "SYM_DIV()"
 #define POW_NAME     "SYM_POW()"
 

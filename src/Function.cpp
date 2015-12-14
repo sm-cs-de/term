@@ -9,9 +9,9 @@ string function_derivate_inner(Term &fkt_arg, const Term &var) {
 
 	Term deriv_arg = fkt_arg.derivate(var);
 	if (deriv_arg.is_primitive() || (deriv_arg.fkt()->args().size() == 1L)) {
-		deriv_ss << Mult::name << deriv_arg._string();
+		deriv_ss << Mul::name << deriv_arg._string();
 	} else {
-		deriv_ss << Mult::name << term_bracket[0] << deriv_arg._string() << term_bracket[1];
+		deriv_ss << Mul::name << term_bracket[0] << deriv_arg._string() << term_bracket[1];
 	}
 
 	return deriv_ss.str();
@@ -108,7 +108,7 @@ const string Cos::name(COS_NAME);
 Term Cos::derivate(const Term &var) {
 	stringstream deriv_ss;
 
-	deriv_ss << Minus::name << Sin::name << function_bracket[0] << m_args[0]->_string() << function_bracket[1];
+	deriv_ss << Sub::name << Sin::name << function_bracket[0] << m_args[0]->_string() << function_bracket[1];
 	deriv_ss << function_derivate_inner(*m_args[0], var);
 
 	return Term(deriv_ss.str());
@@ -131,7 +131,7 @@ const string Tan::name(TAN_NAME);
 Term Tan::derivate(const Term &var) {
 	stringstream deriv_ss;
 
-	deriv_ss << term_bracket[0] << "1" << Plus::name << Tan::name << function_bracket[0] << m_args[0]->_string() << function_bracket[1] << Pow::name << "2" << term_bracket[1];
+	deriv_ss << term_bracket[0] << "1" << Add::name << Tan::name << function_bracket[0] << m_args[0]->_string() << function_bracket[1] << Pow::name << "2" << term_bracket[1];
 	deriv_ss << function_derivate_inner(*m_args[0], var);
 
 	return Term(deriv_ss.str());

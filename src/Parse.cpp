@@ -117,8 +117,8 @@ void Term::parse() {	cout << "» " << m_string << endl;
 		}
 	}
 
-	/* Minus am Anfang fixen für interne Rechnungen */
-	if ((m_string.size() >= Minus::name.size()) && (m_string.substr(0,Minus::name.size()).compare(Minus::name) == 0L)) {
+	/* Sub am Anfang fixen für interne Rechnungen */
+	if ((m_string.size() >= Sub::name.size()) && (m_string.substr(0,Sub::name.size()).compare(Sub::name) == 0L)) {
 		m_string = string("0") + m_string;
 		parse();
 		return;
@@ -195,7 +195,7 @@ bool Term::parse_numeric() {
       if (pos != string::npos) {
          return false;
       } else {
-         pos = m_string.find(Minus::name);
+         pos = m_string.find(Sub::name);
          if (pos && (pos !=string::npos)) {
             return false;
          }
@@ -264,10 +264,10 @@ void Term::parse_brackets(vector<long> &level, const string &bracket_type) const
 
 bool Term::parse_op_comb() {
    vector<string> variants = { // TODO: andere Kombinationen mit aufnehmen
-      Plus::name+Plus::name, Plus::name+Minus::name, Minus::name+Plus::name, Minus::name+Minus::name
+      Add::name+Add::name, Add::name+Sub::name, Sub::name+Add::name, Sub::name+Sub::name
    };
    vector<string> equivalent = {
-      Plus::name, Minus::name, Minus::name, Plus::name
+      Add::name, Sub::name, Sub::name, Add::name
    };
 
    size_t pos, len = m_string.size();
@@ -351,16 +351,16 @@ void Term::parse_subterms(vector<string> &subterms, vector<string> &ops, const v
 		}
 
 		/* Zwischen Operatoren ? */
-		if (name_size = Plus::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Plus::name) == 0L)) {
+		if (name_size = Add::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Add::name) == 0L)) {
 			in_operator = true;
-			ops.push_back(Plus::name);
-		} else if (name_size = Minus::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Minus::name) == 0L)) {
+			ops.push_back(Add::name);
+		} else if (name_size = Sub::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Sub::name) == 0L)) {
 			if (!idx && m_is_numeric) { idx += name_size; continue; }				/* Damit - auch am Anfang stehen kann */
 			in_operator = true;
-			ops.push_back(Minus::name);
-		} else if (name_size = Mult::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Mult::name) == 0L)) {
+			ops.push_back(Sub::name);
+		} else if (name_size = Mul::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Mul::name) == 0L)) {
 			in_operator = true;
-			ops.push_back(Mult::name);
+			ops.push_back(Mul::name);
 		} else if (name_size = Div::name.size(), (m_string.size()-idx >= name_size) && (m_string.substr(idx,name_size).compare(Div::name) == 0L)) {
 			in_operator = true;
 			ops.push_back(Div::name);
@@ -436,20 +436,20 @@ void Term::create(const vector<string> &subterms, const vector<string> &ops) {
 
 		} else {													/* Nein -> Mehrere Operanden */
 			for (unsigned long i=0; i<ops.size(); i++) {
-				if (ops[i].compare(Plus::name) == 0L) {
-					m_fkt = new Plus(get_multi_args(subterms,Plus::name));
+				if (ops[i].compare(Add::name) == 0L) {
+					m_fkt = new Add(get_multi_args(subterms,Add::name));
 					return;
 				}
 			}
 			for (unsigned long i=0; i<ops.size(); i++) {
-				if (ops[i].compare(Minus::name) == 0L) {
-					m_fkt = new Minus(get_multi_args(subterms,Minus::name));
+				if (ops[i].compare(Sub::name) == 0L) {
+					m_fkt = new Sub(get_multi_args(subterms,Sub::name));
 					return;
 				}
 			}
 			for (unsigned long i=0; i<ops.size(); i++) {
-				if (ops[i].compare(Mult::name) == 0L) {
-					m_fkt = new Mult(get_multi_args(subterms,Mult::name));
+				if (ops[i].compare(Mul::name) == 0L) {
+					m_fkt = new Mul(get_multi_args(subterms,Mul::name));
 					return;
 				}
 			}

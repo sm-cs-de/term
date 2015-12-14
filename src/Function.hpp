@@ -30,9 +30,9 @@ class Function {
 
 /** Operatoren */
 
-class Plus : public Function {
+class Add : public Function {
    public:
-      Plus(const std::vector<std::string> &term_str);
+      Add(const std::vector<std::string> &term_str);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -42,9 +42,9 @@ class Plus : public Function {
       virtual Term simplify();
 };
 
-class Minus : public Function {
+class Sub : public Function {
    public:
-      Minus(const std::vector<std::string> &term_str);
+      Sub(const std::vector<std::string> &term_str);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -54,9 +54,9 @@ class Minus : public Function {
       virtual Term simplify();
 };
 
-class Mult : public Function {
+class Mul : public Function {
    public:
-      Mult(const std::vector<std::string> &term_str);
+      Mul(const std::vector<std::string> &term_str);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
