@@ -2,7 +2,6 @@
 #define TERM_PARSE_HPP
 
 #include "Main.hpp"
-#include "Term.hpp"
 
 
  /* Klammern */
@@ -68,6 +67,7 @@ class Ast {
 void yyerror(Ast **const ast, std::string error);           // Linker-Info, Erstes Argument nur, weil `%parse-param` in `Parse.y` dies so festlegt.
 int  yyparse(Ast **const ast);                              // Linker-Info, bzgl. Argument s.o.
 void str_alloc(char **const str, const char *const yytext); // Allokator für `char *str`, siehe `Parse.y`.
+void str_free(char **str);                                  // De-Allokator, s.o.
 
 
 #endif

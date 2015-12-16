@@ -27,7 +27,7 @@
 %left<str>  ADD SUB
 %left<str>  MUL DIV
 %right<str> POW
-//%nonassoc
+%nonassoc<str> USUB
 
 %token<str> FUNC
 
@@ -47,15 +47,15 @@ term: %empty
 
 
 expr: TERM_BRA expr TERM_KET      { $$ = $2; }
-    | expr ADD expr               { $$ = new Ast($2,$1,$3); }
-    | expr SUB expr               { $$ = new Ast($2,$1,$3); }
-    | expr MUL expr               { $$ = new Ast($2,$1,$3); }
-    | expr DIV expr               { $$ = new Ast($2,$1,$3); }
-    | expr POW expr               { $$ = new Ast($2,$1,$3); }
-    | FUNC FUNC_BRA expr FUNC_KET { $$ = new Ast($1,$3);    }
+    | expr ADD expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
+    | expr SUB expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
+    | expr MUL expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
+    | expr DIV expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
+    | expr POW expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
+    | SUB expr %prec USUB         { $$ = new Ast($1,$2,NULL); str_free(&$1); }
+    | FUNC FUNC_BRA expr FUNC_KET { $$ = new Ast($1,$3);      str_free(&$1); }
     | SYM
     | NUM
-//    | OP_UN expr {}
     ;
 
 
