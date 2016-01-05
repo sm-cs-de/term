@@ -14,7 +14,9 @@ int main(int argc, char *argv[]) {
 		}
 
 		string in(argv[1]);
-		Term input(in);
+      Ast *ast = Ast::parse(in);
+
+		Term input(ast);
 
 //		cout << COL_HLP << "Lib:" << COL_CLR << endl;
 //		Lib *lib = new Lib(&input, "term", false);

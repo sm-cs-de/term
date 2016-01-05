@@ -50,12 +50,12 @@ DOT "."
 "SYM_M_2_SQRTPI()" |
 "SYM_M_SQRT2()"    |
 "SYM_M_SQRT1_2()"  |
-({TXT}+[0-9]*)+    { yylval.ast = new Ast(yytext); return SYM; }
+({TXT}+[0-9]*)+    { str_alloc(&yylval.str,yytext); return SYM; }
 
 
  /* Zahlen */
 [0-9]+{DOT}[0-9]*{EXP}? |
-{DOT}?[0-9]+{EXP}?      { yylval.ast = new Ast(atof(yytext)); return NUM; }
+{DOT}?[0-9]+{EXP}?      { str_alloc(&yylval.str,yytext); return NUM; }
 
 
 

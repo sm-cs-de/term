@@ -23,6 +23,8 @@ class Function {
    protected:
       Function(const std::vector<std::string> &term_str);
       Function(const std::string &term_str);
+      Function(const Ast *const arg);
+      Function(const Ast *const left, const Ast *const right);
 
       std::vector<Term *> m_args;
 };

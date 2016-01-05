@@ -32,10 +32,10 @@
 %token<str> FUNC
 
  /* Konstanten + Symbole */
-%token<ast> SYM
+%token<str> SYM
 
  /* Zahlen */
-%token<ast> NUM
+%token<str> NUM
 
 
 %%
@@ -47,15 +47,15 @@ term: %empty
 
 
 expr: TERM_BRA expr TERM_KET      { $$ = $2; }
-    | expr ADD expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
-    | expr SUB expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
-    | expr MUL expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
-    | expr DIV expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
-    | expr POW expr               { $$ = new Ast($2,$1,$3);   str_free(&$2); }
-    | SUB expr %prec USUB         { $$ = new Ast($1,$2,NULL); str_free(&$1); }
-    | FUNC FUNC_BRA expr FUNC_KET { $$ = new Ast($1,$3);      str_free(&$1); }
-    | SYM
-    | NUM
+    | expr ADD expr               { $$ = new Ast($2,$1,$3);    str_free(&$2); }
+    | expr SUB expr               { $$ = new Ast($2,$1,$3);    str_free(&$2); }
+    | expr MUL expr               { $$ = new Ast($2,$1,$3);    str_free(&$2); }
+    | expr DIV expr               { $$ = new Ast($2,$1,$3);    str_free(&$2); }
+    | expr POW expr               { $$ = new Ast($2,$1,$3);    str_free(&$2); }
+    | SUB expr %prec USUB         { $$ = new Ast($1,NULL,$2);  str_free(&$1); }
+    | FUNC FUNC_BRA expr FUNC_KET { $$ = new Ast($1,$3);       str_free(&$1); }
+    | SYM                         { $$ = new Ast($1);          str_free(&$1); }
+    | NUM                         { $$ = new Ast($1,atof($1)); str_free(&$1); }
     ;
 
 

@@ -43,12 +43,14 @@ static const std::map<std::string,double> constants = {
  /* Abstrakter-Syntax-Baum (AST) */
 class Ast {
    public:
-      enum Type { FUNC, SYM, NUM } m_type;
+      enum Type { OP, FUNC, SYM, NUM } m_type;
 
-      Ast(const char *const op_str,  Ast *const left, Ast *const right); // Operatoren
+      Ast(const char *const op_str, Ast *const left, Ast *const right);  // Operatoren
       Ast(const char *const func_str, Ast *const arg);                   // Funktionen
       Ast(const char *const sym_str);                                    // Symbole + Konstanten
-      Ast(const double num);                                             // Zahlen
+      Ast(const char *const num_str, const double num);                  // Zahlen
+
+      static Ast *parse(const std::string &term_str);
 
       std::string _string() const;
       std::string print() const;
@@ -64,8 +66,8 @@ class Ast {
 
 
  /* Linker-Informationen und Hilfsfunktionen für Parser */
-void yyerror(Ast **const ast, std::string error);           // Linker-Info, Erstes Argument nur, weil `%parse-param` in `Parse.y` dies so festlegt.
-int  yyparse(Ast **const ast);                              // Linker-Info, bzgl. Argument s.o.
+void yyerror(Ast **const ast, std::string error);           // Linker-Info; Erstes Argument nur, weil `%parse-param` in `Parse.y` dies so festlegt.
+int  yyparse(Ast **const ast);                              // Linker-Info; Bzgl. Argument s.o.
 void str_alloc(char **const str, const char *const yytext); // Allokator für `char *str`, siehe `Parse.y`.
 void str_free(char **str);                                  // De-Allokator, s.o.
 

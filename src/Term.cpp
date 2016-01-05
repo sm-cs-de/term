@@ -1,20 +1,19 @@
 #include "Term.hpp"
-#include "Parse.l.hpp"
 
 
 using namespace std;
 
 
-Term::Term(const string &term_str) : m_fkt(NULL), m_is_primitive(false), m_string(term_str), m_is_numeric(false), m_num(0.0) {
-   YY_BUFFER_STATE buffer = yy_scan_string(term_str.c_str());
-
-   Ast *ast = NULL;
-   yyparse(&ast);
-
-   yy_delete_buffer(buffer);
-
+Term::Term(const string &term_str) : m_string(term_str), m_fkt(NULL), m_is_primitive(false), m_is_numeric(false), m_num(0.0) {
+   Ast *ast = Ast::parse(term_str);
    create(ast);
 }
+
+
+Term::Term(const Ast *const ast) : m_string(ast->_string()), m_fkt(NULL), m_is_primitive(false), m_is_numeric(false), m_num(0.0) {
+   create(ast);
+}
+
 
 Term Term::derivate(const Term &var) const {
 	stringstream ss;
@@ -38,6 +37,7 @@ Term Term::derivate(const Term &var) const {
 		return m_fkt->derivate(var);
 	}
 }
+
 
 Term Term::evaluate(const Term &var, const Term &val) const {
 	stringstream ss;
@@ -64,6 +64,7 @@ Term Term::evaluate(const Term &var, const Term &val) const {
 	}
 }
 
+
 Term &Term::simplify() {
 	string current = m_string;
 
@@ -76,4 +77,42 @@ Term &Term::simplify() {
 	}
 
 	return *this;
+}
+
+
+void Term::create(const Ast *const ast) {
+   if (!ast) { throw new Error(string("Kein AST übergeben !")); }
+
+   Ast::Type type = ast->m_type;
+
+   if (type == Ast::OP) {
+      string op_str = ast->m_string;
+      Ast *left = ast->m_left;
+      Ast *right = ast->m_right;
+
+
+   } else if (type == Ast::FUNC) {
+      string func_str = ast->m_string;
+      Ast *arg = ast->m_arg;
+
+      if (func_str == Exp::name) {
+
+      } else if (func_str == Sin::name) {
+
+      } else if (func_str == Cos::name) {
+
+      } else if (func_str == Tan::name) {
+
+      }
+      // ...
+
+
+   } else if (type == Ast::SYM) {
+      m_is_primitive = true;
+
+   } else if (type == Ast::NUM) {
+      m_is_primitive = true;
+      m_is_numeric = true;
+      m_num = ast->m_num;
+   }
 }

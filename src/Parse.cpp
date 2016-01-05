@@ -1,5 +1,6 @@
 #include "Parse.hpp"
 #include "Term.hpp"
+#include "Parse.l.hpp"
 
 
 using namespace std;
@@ -24,20 +25,33 @@ void str_free(char **str) {
 }
 
 
-Ast::Ast(const char *const op_str, Ast *const left, Ast *const right):
-   m_type(FUNC), m_string(string(op_str)), m_num(0.0), m_arg(NULL), m_left(left), m_right(right) {}
+Ast::Ast(const char *const op_str, Ast *const left, Ast *const right) :
+   m_type(OP), m_string(string(op_str)), m_num(0.0), m_arg(NULL), m_left(left), m_right(right) {}
 
 
-Ast::Ast(const char *const func_str, Ast *const arg):
+Ast::Ast(const char *const func_str, Ast *const arg) :
    m_type(FUNC), m_string(string(func_str)), m_num(0.0), m_arg(arg), m_left(NULL), m_right(NULL) {}
 
 
-Ast::Ast(const char *const sym_str):
+Ast::Ast(const char *const sym_str) :
    m_type(SYM), m_string(string(sym_str)), m_num(0.0), m_arg(NULL), m_left(NULL), m_right(NULL) {}
 
 
-Ast::Ast(const double num):
-   m_type(NUM), m_string(""), m_num(num), m_arg(NULL), m_left(NULL), m_right(NULL) {}
+Ast::Ast(const char *const num_str, const double num) :
+   m_type(NUM), m_string(string(num_str)), m_num(num), m_arg(NULL), m_left(NULL), m_right(NULL) {}
+
+
+Ast *Ast::parse(const string &term_str) {
+   YY_BUFFER_STATE yy_buffer = yy_scan_string(term_str.c_str());
+
+   Ast *ast = NULL;
+   yyparse(&ast);
+
+   yy_delete_buffer(yy_buffer);
+
+   cout << ast->print_tree() << endl;
+   return ast;
+}
 
 
 string Ast::_string() const {
@@ -95,14 +109,4 @@ string Ast::print_tree() const {
    }
 
    return ss.str();
-}
-
-
-void Term::create(const Ast *const ast) {
-   if (!ast) {
-      throw new Error("Kein Syntaxbaum übergeben !");
-   }
-
-   cout << ast->print_tree() << endl;
-
 }

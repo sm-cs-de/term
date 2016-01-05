@@ -53,6 +53,15 @@ Function::Function(const string &term_str) {
    m_args.push_back(new Term(term_str));
 }
 
+Function::Function(const Ast *const arg) {
+   m_args.push_back(new Term(arg));
+}
+
+Function::Function(const Ast *const left, const Ast *const right) {
+   m_args.push_back(new Term(left));
+   m_args.push_back(new Term(right));
+}
+
 
 /** Exp */
 Exp::Exp(const string &term_str) : Function(term_str) {}
