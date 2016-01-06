@@ -49,7 +49,6 @@ Ast *Ast::parse(const string &term_str) {
 
    yy_delete_buffer(yy_buffer);
 
-   cout << ast->print_tree() << endl;
    return ast;
 }
 
@@ -70,8 +69,16 @@ string Ast::print() const {
 
    if (m_arg) {
       ss << _string() << function_bracket[0] << m_arg->print() << function_bracket[1];
-   } else if (m_left && m_right) {
-      ss << m_left->print() << _string() << m_right->print();
+
+   } else if (m_left || m_right) {
+      if (m_left) {
+         ss << m_left->print();
+      }
+      ss << _string();
+      if (m_right) {
+         ss << m_right->print();
+      }
+
    } else {
       ss << _string();
    }

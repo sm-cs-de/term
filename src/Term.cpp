@@ -4,13 +4,10 @@
 using namespace std;
 
 
-Term::Term(const string &term_str) : m_string(term_str), m_fkt(NULL), m_is_primitive(false), m_is_numeric(false), m_num(0.0) {
-   Ast *ast = Ast::parse(term_str);
-   create(ast);
-}
+Term::Term(const string &term_str) : Term(Ast::parse(term_str)) {}
 
 
-Term::Term(const Ast *const ast) : m_string(ast->_string()), m_fkt(NULL), m_is_primitive(false), m_is_numeric(false), m_num(0.0) {
+Term::Term(const Ast *const ast) : m_string(""), m_fkt(NULL), m_is_primitive(false), m_is_numeric(false), m_num(0.0) {
    create(ast);
 }
 
@@ -83,29 +80,30 @@ Term &Term::simplify() {
 void Term::create(const Ast *const ast) {
    if (!ast) { throw new Error(string("Kein AST übergeben !")); }
 
-   Ast::Type type = ast->m_type;
+   m_string = ast->print();
 
+   Ast::Type type = ast->m_type;
    if (type == Ast::OP) {
       string op_str = ast->m_string;
       Ast *left = ast->m_left;
       Ast *right = ast->m_right;
 
+      if      (op_str == Add::name) { m_fkt = new Add(left, right); }
+      else if (op_str == Sub::name) { m_fkt = new Sub(left, right); }
+      else if (op_str == Mul::name) { m_fkt = new Mul(left, right); }
+      else if (op_str == Div::name) { m_fkt = new Div(left, right); }
+      else if (op_str == Pow::name) { m_fkt = new Pow(left, right); }
+      // ...
 
    } else if (type == Ast::FUNC) {
       string func_str = ast->m_string;
       Ast *arg = ast->m_arg;
 
-      if (func_str == Exp::name) {
-
-      } else if (func_str == Sin::name) {
-
-      } else if (func_str == Cos::name) {
-
-      } else if (func_str == Tan::name) {
-
-      }
+      if      (func_str == Exp::name) { m_fkt = new Exp(arg); }
+      else if (func_str == Sin::name) { m_fkt = new Sin(arg); }
+      else if (func_str == Cos::name) { m_fkt = new Cos(arg); }
+      else if (func_str == Tan::name) { m_fkt = new Tan(arg); }
       // ...
-
 
    } else if (type == Ast::SYM) {
       m_is_primitive = true;

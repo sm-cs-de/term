@@ -7,6 +7,8 @@ using namespace std;
 /** Add */
 Add::Add(const vector<string> &term_str) : Function(term_str) {}
 
+Add::Add(const Ast *const left, const Ast *const right) : Function(left, right) {}
+
 const string Add::name(ADD_NAME);
 
 Term Add::derivate(const Term &var) {
@@ -75,6 +77,8 @@ Term Add::simplify() {
 
 /** Sub */
 Sub::Sub(const vector<string> &term_str) : Function(term_str) {}
+
+Sub::Sub(const Ast *const left, const Ast *const right) : Function(left, right) {}
 
 const string Sub::name(SUB_NAME);
 
@@ -175,6 +179,8 @@ Term Sub::simplify() {
 /** Mul */
 Mul::Mul(const vector<string> &term_str) : Function(term_str) {}
 
+Mul::Mul(const Ast *const left, const Ast *const right) : Function(left, right) {}
+
 const string Mul::name(MUL_NAME);
 
 Term Mul::derivate(const Term &var) {
@@ -263,6 +269,8 @@ Term Mul::simplify() {
 
 /** Div */
 Div::Div(const vector<string> &term_str) : Function(term_str) {}
+
+Div::Div(const Ast *const left, const Ast *const right) : Function(left, right) {}
 
 const string Div::name(DIV_NAME);
 
@@ -420,6 +428,8 @@ Term Div::simplify() {
 
 /** Pow */
 Pow::Pow(const vector<string> &term_str) : Function(term_str) {}
+
+Pow::Pow(const Ast *const left, const Ast *const right) : Function(left, right) {}
 
 const string Pow::name(POW_NAME);
 

@@ -14,9 +14,12 @@ int main(int argc, char *argv[]) {
 		}
 
 		string in(argv[1]);
+
       Ast *ast = Ast::parse(in);
+      cout << ast->print_tree() << endl;
 
 		Term input(ast);
+		cout << input._string() << endl;
 
 //		cout << COL_HLP << "Lib:" << COL_CLR << endl;
 //		Lib *lib = new Lib(&input, "term", false);

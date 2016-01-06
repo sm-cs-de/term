@@ -35,6 +35,7 @@ class Function {
 class Add : public Function {
    public:
       Add(const std::vector<std::string> &term_str);
+      Add(const Ast *const left, const Ast *const right);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -47,6 +48,7 @@ class Add : public Function {
 class Sub : public Function {
    public:
       Sub(const std::vector<std::string> &term_str);
+      Sub(const Ast *const left, const Ast *const right);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -59,6 +61,7 @@ class Sub : public Function {
 class Mul : public Function {
    public:
       Mul(const std::vector<std::string> &term_str);
+      Mul(const Ast *const left, const Ast *const right);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -71,6 +74,7 @@ class Mul : public Function {
 class Div : public Function {
    public:
       Div(const std::vector<std::string> &term_str);
+      Div(const Ast *const left, const Ast *const right);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -83,6 +87,7 @@ class Div : public Function {
 class Pow : public Function {
    public:
       Pow(const std::vector<std::string> &term_str);
+      Pow(const Ast *const left, const Ast *const right);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -98,6 +103,7 @@ class Pow : public Function {
 class Exp : public Function {
    public:
       Exp(const std::string &term_str);
+      Exp(const Ast *const arg);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -110,6 +116,7 @@ class Exp : public Function {
 class Sin : public Function {
    public:
       Sin(const std::string &term_str);
+      Sin(const Ast *const arg);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -122,6 +129,7 @@ class Sin : public Function {
 class Cos : public Function {
    public:
       Cos(const std::string &term_str);
+      Cos(const Ast *const arg);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
@@ -134,6 +142,7 @@ class Cos : public Function {
 class Tan : public Function {
    public:
       Tan(const std::string &term_str);
+      Tan(const Ast *const arg);
 
       static const std::string name;
       virtual inline const std::string &_name() const { return name; }
