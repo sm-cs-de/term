@@ -78,7 +78,7 @@ Term &Term::simplify() {
 
 
 void Term::create(const Ast *const ast) {
-   if (!ast) { throw new Error(string("Kein AST übergeben !")); }
+   if (!ast) { return; }
 
    m_string = ast->print();
 
